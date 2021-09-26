@@ -18,7 +18,7 @@ export type UseSubscriptionOptions<
   TError = Error,
   TData = TSubscriptionFnData,
   TSubscriptionKey extends QueryKey = QueryKey
-> = Omit<
+> = Pick<
   UseQueryOptions<TSubscriptionFnData, TError, TData, TSubscriptionKey>,
   'select'
 >;

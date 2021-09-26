@@ -475,4 +475,25 @@ describe('useSubscription', () => {
       expect(finalizeFn).toHaveBeenCalledTimes(1);
     });
   });
+
+  describe('options', () => {
+    describe('select', () => {
+      it('should apply select function', async () => {
+        const { result, waitForNextUpdate } = renderHook(
+          () =>
+            useSubscription(testSubscriptionKey, testSubscriptionFn, {
+              select: (data) => 10 * (data + 1),
+            }),
+          { wrapper: Wrapper }
+        );
+        expect(result.current.data).toBeUndefined();
+
+        await waitForNextUpdate();
+        expect(result.current.data).toBe(10);
+
+        await waitForNextUpdate();
+        expect(result.current.data).toBe(20);
+      });
+    });
+  });
 });
