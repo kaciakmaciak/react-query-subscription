@@ -20,7 +20,7 @@ export type UseSubscriptionOptions<
   TSubscriptionKey extends QueryKey = QueryKey
 > = Pick<
   UseQueryOptions<TSubscriptionFnData, TError, TData, TSubscriptionKey>,
-  'select'
+  'select' | 'placeholderData'
 >;
 
 export interface SubscriptionEmitErrorResult<TData = unknown, TError = unknown>

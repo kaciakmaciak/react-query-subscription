@@ -495,5 +495,27 @@ describe('useSubscription', () => {
         expect(result.current.data).toBe(20);
       });
     });
+
+    describe('placeholderData', () => {
+      it('should support placeholder data', async () => {
+        const { result, waitForNextUpdate } = renderHook(
+          () =>
+            useSubscription(testSubscriptionKey, testSubscriptionFn, {
+              placeholderData: 100,
+            }),
+          { wrapper: Wrapper }
+        );
+        expect(result.current.status).toBe('success');
+        expect(result.current.data).toBe(100);
+
+        await waitForNextUpdate();
+        expect(result.current.status).toBe('success');
+        expect(result.current.data).toBe(0);
+
+        await waitForNextUpdate();
+        expect(result.current.status).toBe('success');
+        expect(result.current.data).toBe(1);
+      });
+    });
   });
 });
