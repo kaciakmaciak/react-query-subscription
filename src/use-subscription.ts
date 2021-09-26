@@ -8,8 +8,10 @@ import {
   UseQueryOptions,
   UseQueryResult,
 } from 'react-query';
-import { Observable, Subscription, of, firstValueFrom } from 'rxjs';
+import { Observable, of, firstValueFrom } from 'rxjs';
 import { catchError, finalize, share, tap, skip } from 'rxjs/operators';
+
+import { storeSubscription, cleanupSubscription } from './subscription-storage';
 
 export type UseSubscriptionOptions<
   TSubscriptionFnData = unknown,
@@ -43,8 +45,6 @@ export type UseSubscriptionResult<TData = unknown, TError = unknown> =
  * @todo: [ ] make sure all options are covered (or excluded)
  * @todo: [ ] make sure all callbacks are called appropriately
  * @todo: [ ] make sure the status is set to "error" when observable emits an error
- * @todo: [ ] make sure we don't subscribe to a stream "too many" times
- * @todo: [ ] make sure we unsubscribe when needed
  * @todo: [ ] hot observable
  * @todo: [ ] cold observable ?
  * @todo: [ ] react suspense
@@ -71,8 +71,6 @@ export function useSubscription<
   // It might be a different observer associated to the same query key.
   // https://github.com/tannerlinsley/react-query/blob/16b7d290c70639b627d9ada32951d211eac3adc3/src/core/query.ts#L376
   // @todo: move from the component scope to queryCache
-  const activeSubscription = useRef<Subscription>();
-  // @todo: move from the component scope to queryCache
   const failRefetchWith = useRef<false | Error>(false);
 
   const queryFn: QueryFunction<TSubscriptionFnData, TSubscriptionKey> = ({
@@ -88,7 +86,7 @@ export function useSubscription<
     // (result as any).cancel = () => console.log('** CANCEL **');
 
     // @todo: Skip subscription for SSR
-    activeSubscription.current?.unsubscribe();
+    cleanupSubscription(queryClient, subscriptionKey);
 
     const subscription = stream$
       .pipe(
@@ -109,7 +107,7 @@ export function useSubscription<
 
     // remember the current subscription
     // see `cleanup` fn for more info
-    activeSubscription.current = subscription;
+    storeSubscription(queryClient, subscriptionKey, subscription);
 
     return result;
   };
@@ -138,12 +136,20 @@ export function useSubscription<
         ?.getObserversCount();
 
       if (activeObserversCount === 0) {
-        activeSubscription.current?.unsubscribe();
-        activeSubscription.current = undefined;
+        cleanupSubscription(queryClient, subscriptionKey);
       }
     };
   }, [queryClient, subscriptionKey]);
 
   // @todo: different response for the emit error
+  // if (failRefetchWith.current) {
+  //   return {
+  //     ...queryResult,
+  //     isRefetchError: false,
+  //     isEmitError: true,
+  //     isPreviousData: true,
+  //   } as any; // @todo: types
+  // }
+
   return queryResult;
 }

@@ -171,4 +171,308 @@ describe('useSubscription', () => {
     unmount();
     expect(finalizeFn).toHaveBeenCalledTimes(1);
   });
+
+  describe('multiple components subscribed to a different subscription key', () => {
+    let firstHookRender: RenderHookResult<
+      UseSubscriptionOptions,
+      UseSubscriptionResult
+    >;
+
+    beforeEach(() => {
+      firstHookRender = renderHook(
+        (options: UseSubscriptionOptions) =>
+          useSubscription(
+            'first-subscription-key',
+            testSubscriptionFn,
+            options
+          ),
+        { wrapper: Wrapper }
+      );
+    });
+
+    afterEach(() => {
+      firstHookRender.unmount();
+    });
+
+    test('status and data when rendered the same time as first component', async () => {
+      const { result, waitForNextUpdate } = renderHook(
+        () => useSubscription(testSubscriptionKey, testSubscriptionFn),
+        { wrapper: Wrapper }
+      );
+      expect(result.current.status).toBe('loading');
+      expect(result.current.data).toBeUndefined();
+
+      await waitForNextUpdate();
+      expect(result.current.status).toBe('success');
+      expect(result.current.data).toBe(0);
+
+      await waitForNextUpdate();
+      expect(result.current.status).toBe('success');
+      expect(result.current.data).toBe(1);
+    });
+
+    test('status and data when rendered after the first component', async () => {
+      await firstHookRender.waitFor(() => {
+        expect(firstHookRender.result.current.status).toBe('success');
+      });
+
+      const { result, waitForNextUpdate } = renderHook(
+        () => useSubscription(testSubscriptionKey, testSubscriptionFn),
+        { wrapper: Wrapper }
+      );
+      expect(result.current.status).toBe('loading');
+      expect(result.current.data).toBeUndefined();
+
+      await waitForNextUpdate();
+      expect(result.current.status).toBe('success');
+      expect(result.current.data).toBe(0);
+
+      await waitForNextUpdate();
+      expect(result.current.status).toBe('success');
+      expect(result.current.data).toBe(1);
+    });
+
+    test('status and data after first component unmount', async () => {
+      await firstHookRender.waitFor(() => {
+        expect(firstHookRender.result.current.status).toBe('success');
+      });
+
+      const { result, waitFor, waitForNextUpdate } = renderHook(
+        () => useSubscription(testSubscriptionKey, testSubscriptionFn),
+        { wrapper: Wrapper }
+      );
+
+      await waitFor(() => {
+        expect(result.current.status).toBe('success');
+        expect(result.current.data).toBe(1);
+      });
+
+      firstHookRender.unmount();
+
+      await waitForNextUpdate();
+      expect(result.current.status).toBe('success');
+      expect(result.current.data).toBe(2);
+    });
+
+    test('status and data after second component unmount', async () => {
+      await firstHookRender.waitFor(() => {
+        expect(firstHookRender.result.current.status).toBe('success');
+      });
+
+      const { waitFor, unmount } = renderHook(
+        () => useSubscription(testSubscriptionKey, testSubscriptionFn),
+        { wrapper: Wrapper }
+      );
+
+      await waitFor(() => {
+        expect(firstHookRender.result.current.status).toBe('success');
+        expect(firstHookRender.result.current.data).toBe(1);
+      });
+
+      unmount();
+
+      await firstHookRender.waitForNextUpdate();
+      expect(firstHookRender.result.current.status).toBe('success');
+      expect(firstHookRender.result.current.data).toBe(2);
+    });
+
+    it('should subscribe for both components', async () => {
+      expect(testSubscriptionFn).toHaveBeenCalledTimes(1);
+      testSubscriptionFn.mockClear();
+
+      const { waitForNextUpdate } = renderHook(
+        () => useSubscription(testSubscriptionKey, testSubscriptionFn),
+        { wrapper: Wrapper }
+      );
+      await waitForNextUpdate();
+      expect(testSubscriptionFn).toHaveBeenCalledTimes(1);
+    });
+
+    it('should only unsubscribe on the second component unmount', async () => {
+      expect(finalizeFn).toHaveBeenCalledTimes(0);
+
+      const { waitForNextUpdate, unmount } = renderHook(
+        () => useSubscription(testSubscriptionKey, testSubscriptionFn),
+        { wrapper: Wrapper }
+      );
+      expect(finalizeFn).toHaveBeenCalledTimes(0);
+
+      await waitForNextUpdate();
+      expect(finalizeFn).toHaveBeenCalledTimes(0);
+
+      unmount();
+      expect(finalizeFn).toHaveBeenCalledTimes(1);
+      finalizeFn.mockClear();
+
+      firstHookRender.unmount();
+      expect(finalizeFn).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not re-subscribe when the first component unmount', async () => {
+      expect(testSubscriptionFn).toHaveBeenCalledTimes(1);
+      testSubscriptionFn.mockClear();
+
+      const { waitForNextUpdate, unmount } = renderHook(
+        () => useSubscription(testSubscriptionKey, testSubscriptionFn),
+        { wrapper: Wrapper }
+      );
+      await waitForNextUpdate();
+      expect(testSubscriptionFn).toHaveBeenCalledTimes(1);
+      testSubscriptionFn.mockClear();
+
+      firstHookRender.unmount();
+      expect(finalizeFn).toHaveBeenCalledTimes(1);
+      finalizeFn.mockClear();
+      expect(testSubscriptionFn).toHaveBeenCalledTimes(0);
+
+      unmount();
+      expect(finalizeFn).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('multiple components subscribed to the same subscription key', () => {
+    let firstHookRender: RenderHookResult<
+      UseSubscriptionOptions,
+      UseSubscriptionResult
+    >;
+
+    beforeEach(() => {
+      firstHookRender = renderHook(
+        (options: UseSubscriptionOptions) =>
+          useSubscription(testSubscriptionKey, testSubscriptionFn, options),
+        { wrapper: Wrapper }
+      );
+    });
+
+    afterEach(() => {
+      firstHookRender.unmount();
+    });
+
+    test('status and data when rendered the same time as first component', async () => {
+      const { result, waitForNextUpdate } = renderHook(
+        () => useSubscription(testSubscriptionKey, testSubscriptionFn),
+        { wrapper: Wrapper }
+      );
+      expect(result.current.status).toBe('loading');
+      expect(result.current.data).toBeUndefined();
+
+      await waitForNextUpdate();
+      expect(result.current.status).toBe('success');
+      expect(result.current.data).toBe(0);
+
+      await waitForNextUpdate();
+      expect(result.current.status).toBe('success');
+      expect(result.current.data).toBe(1);
+    });
+
+    test('status and data when rendered after the first component', async () => {
+      await firstHookRender.waitFor(() => {
+        expect(firstHookRender.result.current.status).toBe('success');
+      });
+
+      const { result, waitForNextUpdate } = renderHook(
+        () => useSubscription(testSubscriptionKey, testSubscriptionFn),
+        { wrapper: Wrapper }
+      );
+      expect(result.current.status).toBe('success');
+      expect(result.current.data).toBe(0);
+
+      await waitForNextUpdate();
+      expect(result.current.status).toBe('success');
+      expect(result.current.data).toBe(1);
+    });
+
+    test('status and data after first component unmount', async () => {
+      await firstHookRender.waitFor(() => {
+        expect(firstHookRender.result.current.status).toBe('success');
+      });
+
+      const { result, waitFor, waitForNextUpdate } = renderHook(
+        () => useSubscription(testSubscriptionKey, testSubscriptionFn),
+        { wrapper: Wrapper }
+      );
+
+      await waitFor(() => {
+        expect(result.current.status).toBe('success');
+        expect(result.current.data).toBe(1);
+      });
+
+      firstHookRender.unmount();
+
+      await waitForNextUpdate();
+      expect(result.current.status).toBe('success');
+      expect(result.current.data).toBe(2);
+    });
+
+    test('status and data after second component unmount', async () => {
+      await firstHookRender.waitFor(() => {
+        expect(firstHookRender.result.current.status).toBe('success');
+      });
+
+      const { result, waitFor, unmount } = renderHook(
+        () => useSubscription(testSubscriptionKey, testSubscriptionFn),
+        { wrapper: Wrapper }
+      );
+
+      await waitFor(() => {
+        expect(result.current.status).toBe('success');
+        expect(result.current.data).toBe(1);
+      });
+
+      unmount();
+
+      await firstHookRender.waitForNextUpdate();
+      expect(firstHookRender.result.current.status).toBe('success');
+      expect(firstHookRender.result.current.data).toBe(2);
+    });
+
+    it('should subscribe only on the first component mount', async () => {
+      expect(testSubscriptionFn).toHaveBeenCalledTimes(1);
+      testSubscriptionFn.mockClear();
+
+      const { waitForNextUpdate } = renderHook(
+        () => useSubscription(testSubscriptionKey, testSubscriptionFn),
+        { wrapper: Wrapper }
+      );
+      await waitForNextUpdate();
+      expect(testSubscriptionFn).toHaveBeenCalledTimes(0);
+    });
+
+    it('should only unsubscribe on the second component unmount', async () => {
+      expect(finalizeFn).toHaveBeenCalledTimes(0);
+
+      const { waitForNextUpdate, unmount } = renderHook(
+        () => useSubscription(testSubscriptionKey, testSubscriptionFn),
+        { wrapper: Wrapper }
+      );
+      expect(finalizeFn).toHaveBeenCalledTimes(0);
+
+      await waitForNextUpdate();
+      expect(finalizeFn).toHaveBeenCalledTimes(0);
+
+      unmount();
+      expect(finalizeFn).toHaveBeenCalledTimes(0);
+
+      firstHookRender.unmount();
+      expect(finalizeFn).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not re-subscribe when the first component unmount', async () => {
+      expect(testSubscriptionFn).toHaveBeenCalledTimes(1);
+      testSubscriptionFn.mockClear();
+
+      const { waitForNextUpdate, unmount } = renderHook(
+        () => useSubscription(testSubscriptionKey, testSubscriptionFn),
+        { wrapper: Wrapper }
+      );
+      await waitForNextUpdate();
+
+      firstHookRender.unmount();
+      expect(finalizeFn).toHaveBeenCalledTimes(0);
+      expect(testSubscriptionFn).toHaveBeenCalledTimes(0);
+
+      unmount();
+      expect(finalizeFn).toHaveBeenCalledTimes(1);
+    });
+  });
 });
