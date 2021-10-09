@@ -157,6 +157,31 @@ describe('useSubscription', () => {
     expect(finalizeFn).toHaveBeenCalledTimes(1);
   });
 
+  test('re-subscribe when mounted/unmounted/mounted', async () => {
+    const { result, waitForNextUpdate, unmount, rerender } = renderHook(
+      () => useSubscription(testSubscriptionKey, testSubscriptionFn),
+      { wrapper: Wrapper }
+    );
+    expect(result.current.status).toBe('loading');
+
+    unmount();
+    expect(testSubscriptionFn).toHaveBeenCalledTimes(1);
+    testSubscriptionFn.mockClear();
+
+    rerender();
+    expect(result.current.status).toBe('loading');
+
+    await waitForNextUpdate();
+    expect(result.current.status).toBe('success');
+    expect(result.current.data).toBe(0);
+
+    await waitForNextUpdate();
+    expect(result.current.status).toBe('success');
+    expect(result.current.data).toBe(1);
+
+    expect(testSubscriptionFn).toHaveBeenCalledTimes(1);
+  });
+
   describe('multiple components subscribed to a different subscription key', () => {
     let firstHookRender: RenderHookResult<
       UseSubscriptionOptions,

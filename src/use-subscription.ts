@@ -85,8 +85,14 @@ export function useSubscription<
 
     const stream$ = subscriptionFn().pipe(share());
     const result = firstValueFrom(stream$);
-    // @todo: Implement cancel
-    // (result as any).cancel = () => console.log('** CANCEL **');
+
+    // Fixes scenario when component unmounts before first emit.
+    // If we do not invalidate the query, the hook will never re-subscribe,
+    // as data are otherwise marked as fresh.
+    // @todo: any
+    (result as any).cancel = () => {
+      queryClient.invalidateQueries(subscriptionKey);
+    };
 
     // @todo: Skip subscription for SSR
     cleanupSubscription(queryClient, subscriptionKey);
