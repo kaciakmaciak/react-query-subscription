@@ -271,6 +271,9 @@ describe('useSubscription', () => {
 
       unmount();
 
+      expect(firstHookRender.result.current.status).toBe('success');
+      expect(firstHookRender.result.current.data).toBe(1);
+
       await firstHookRender.waitForNextUpdate();
       expect(firstHookRender.result.current.status).toBe('success');
       expect(firstHookRender.result.current.data).toBe(2);
@@ -398,6 +401,9 @@ describe('useSubscription', () => {
       });
 
       firstHookRender.unmount();
+
+      expect(result.current.status).toBe('success');
+      expect(result.current.data).toBe(1);
 
       await waitForNextUpdate();
       expect(result.current.status).toBe('success');
