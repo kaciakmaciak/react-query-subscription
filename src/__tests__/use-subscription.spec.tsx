@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderHook, RenderHookResult } from '@testing-library/react-hooks';
-import { interval, fromEvent } from 'rxjs';
-import { take, map, finalize } from 'rxjs/operators';
+import { interval } from 'rxjs';
+import { map, finalize } from 'rxjs/operators';
 import { QueryClient, QueryClientProvider, QueryCache } from 'react-query';
 
 import {
@@ -42,8 +42,9 @@ describe('useSubscription', () => {
     consoleErrorSpy?.mockRestore();
   });
 
+  const testInterval = 10;
   const finalizeFn = jest.fn();
-  const test$ = interval(10).pipe(finalize(finalizeFn));
+  const test$ = interval(testInterval).pipe(finalize(finalizeFn));
   const testSubscriptionFn = jest.fn(() => test$);
 
   const testSubscriptionKey = 'test-subscription-key';
@@ -107,7 +108,7 @@ describe('useSubscription', () => {
 
   test('emitted error', async () => {
     const testErrorSubscriptionFn = () =>
-      interval(10).pipe(
+      interval(testInterval).pipe(
         map((n) => {
           if (n === 2) {
             throw new Error('Test Error');
@@ -483,6 +484,50 @@ describe('useSubscription', () => {
   });
 
   describe('options', () => {
+    describe('enabled', () => {
+      it('should be idle while enabled = false', async () => {
+        const { result } = renderHook(
+          () =>
+            useSubscription(testSubscriptionKey, testSubscriptionFn, {
+              enabled: false,
+            }),
+          { wrapper: Wrapper }
+        );
+        expect(result.current.status).toBe('idle');
+        expect(result.current.data).toBeUndefined();
+
+        // Wait for the test interval amount of time.
+        // The data should not be populated as enabled = false.
+        await new Promise((resolve) => setTimeout(resolve, 2 * testInterval));
+
+        expect(result.current.status).toBe('idle');
+        expect(result.current.data).toBeUndefined();
+        expect(finalizeFn).toHaveBeenCalledTimes(0);
+        expect(testSubscriptionFn).toHaveBeenCalledTimes(0);
+      });
+
+      it('should load once enabled = true', async () => {
+        const { result, rerender, waitForNextUpdate } = renderHook(
+          ({ enabled }: UseSubscriptionOptions) =>
+            useSubscription(testSubscriptionKey, testSubscriptionFn, {
+              enabled,
+            }),
+          { wrapper: Wrapper, initialProps: { enabled: false } }
+        );
+        expect(result.current.data).toBeUndefined();
+
+        rerender({ enabled: true });
+
+        await waitForNextUpdate();
+        expect(result.current.status).toBe('loading');
+        expect(result.current.data).toBeUndefined();
+
+        await waitForNextUpdate();
+        expect(result.current.status).toBe('success');
+        expect(result.current.data).toBe(0);
+      });
+    });
+
     describe('select', () => {
       it('should apply select function', async () => {
         const { result, waitForNextUpdate } = renderHook(
