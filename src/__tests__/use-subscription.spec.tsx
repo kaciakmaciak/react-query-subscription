@@ -19,7 +19,7 @@ describe('useSubscription', () => {
     queryClient = new QueryClient({
       queryCache,
       defaultOptions: {
-        queries: { retry: 0 },
+        queries: { retry: false },
       },
     });
   });
@@ -35,12 +35,6 @@ describe('useSubscription', () => {
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     );
   }
-
-  let consoleErrorSpy: jest.SpyInstance;
-
-  afterEach(() => {
-    consoleErrorSpy?.mockRestore();
-  });
 
   const testInterval = 10;
   const finalizeFn = jest.fn();
@@ -94,16 +88,11 @@ describe('useSubscription', () => {
     expect(result.current.status).toBe('loading');
     expect(result.current.data).toBeUndefined();
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-
     await waitForNextUpdate();
     expect(result.current.status).toBe('error');
     expect(result.current.error).toEqual(new Error('Test Error'));
     expect(result.current.failureCount).toBe(1);
     expect(result.current.data).toBeUndefined();
-
-    expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
   });
 
   test('emitted error', async () => {
@@ -132,16 +121,11 @@ describe('useSubscription', () => {
     expect(result.current.status).toBe('success');
     expect(result.current.data).toBe(1);
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-
     await waitForNextUpdate();
     expect(result.current.status).toBe('error');
     expect(result.current.error).toEqual(new Error('Test Error'));
     expect(result.current.failureCount).toBe(1);
     expect(result.current.data).toBe(1);
-
-    expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should subscribe on mount', async () => {
