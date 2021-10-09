@@ -512,6 +512,64 @@ describe('useSubscription', () => {
       });
     });
 
+    describe('retry', () => {
+      it('should retry failed subscription 2 times', async () => {
+        const testErrorSubscriptionFn = jest.fn(() => {
+          throw new Error('Test Error');
+        });
+    
+        const { result, waitFor } = renderHook(
+          () =>
+            useSubscription(testSubscriptionKey, testErrorSubscriptionFn, {
+              retry: 2,
+            }),
+          { wrapper: Wrapper }
+        );
+        expect(result.current.status).toBe('loading');
+        expect(result.current.data).toBeUndefined();
+
+        await waitFor(() => {
+          expect(result.current.status).toBe('error');
+        }, { timeout: 10000 });
+        expect(result.current.error).toEqual(new Error('Test Error'));
+        expect(result.current.failureCount).toBe(3);
+        expect(result.current.data).toBeUndefined();
+        expect(testErrorSubscriptionFn).toHaveBeenCalledTimes(3);
+      });
+
+      it('should not retry subscription if successfully subscribed but error emitted', async () => {
+        const testErrorSubscriptionFn = jest.fn(() =>
+          interval(testInterval).pipe(
+            map((n) => {
+              if (n === 2) {
+                throw new Error('Test Error');
+              }
+              return n;
+            })
+          ));
+    
+        const { result, waitFor } = renderHook(
+          () =>
+            useSubscription(testSubscriptionKey, testErrorSubscriptionFn, {
+              retry: 2,
+            }),
+          { wrapper: Wrapper }
+        );
+        expect(result.current.status).toBe('loading');
+        expect(result.current.data).toBeUndefined();
+    
+        await waitFor(() => {
+          expect(result.current.status).toBe('error');
+        }, { timeout: 10000 });
+        expect(result.current.error).toEqual(new Error('Test Error'));
+         // the queryFn runs 3x but the subscriptionFn is called only once
+        expect(result.current.failureCount).toBe(3);
+        expect(result.current.data).toBe(1);
+
+        expect(testErrorSubscriptionFn).toHaveBeenCalledTimes(1);
+      });
+    });
+
     describe('select', () => {
       it('should apply select function', async () => {
         const { result, waitForNextUpdate } = renderHook(
