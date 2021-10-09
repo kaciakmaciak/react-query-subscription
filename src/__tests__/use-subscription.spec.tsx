@@ -611,4 +611,54 @@ describe('useSubscription', () => {
       });
     });
   });
+
+  describe('returns', () => {
+    test('refetch', async () => {
+      const { result, waitFor, unmount } = renderHook(
+        () => useSubscription(testSubscriptionKey, testSubscriptionFn),
+        { wrapper: Wrapper }
+      );
+      await waitFor(() => {
+        expect(result.current.status).toBe('success');
+        expect(result.current.data).toBe(1);
+      });
+      expect(testSubscriptionFn).toHaveBeenCalledTimes(1);
+
+      const refetchPromise = result.current.refetch();
+      expect(result.current.status).toBe('success');
+      expect(result.current.data).toBe(1);
+
+      await refetchPromise;
+      expect(result.current.status).toBe('success');
+      expect(result.current.data).toBe(0);
+
+      expect(testSubscriptionFn).toHaveBeenCalledTimes(2);
+      unmount();
+    });
+  });
+
+  describe('queryClient', () => {
+    test('invalidateQueries', async () => {
+      const { result, waitFor, unmount } = renderHook(
+        () => useSubscription(testSubscriptionKey, testSubscriptionFn),
+        { wrapper: Wrapper }
+      );
+      await waitFor(() => {
+        expect(result.current.status).toBe('success');
+        expect(result.current.data).toBe(1);
+      });
+      expect(testSubscriptionFn).toHaveBeenCalledTimes(1);
+
+      queryClient.invalidateQueries(testSubscriptionKey);
+      expect(result.current.status).toBe('success');
+      expect(result.current.data).toBe(1);
+
+      await waitFor(() => {
+        expect(result.current.status).toBe('success');
+        expect(result.current.data).toBe(0);
+      });
+      expect(testSubscriptionFn).toHaveBeenCalledTimes(2);
+      unmount();
+    });
+  });
 });
