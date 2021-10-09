@@ -144,6 +144,13 @@ export function useSubscription<
     };
   }, [queryClient, subscriptionKey]);
 
+  // Fixes refetch and invalidate.
+  // Once the error has been thrown, and a query result created (with error)
+  // cleanup the `failRefetchWith`.
+  useEffect(() => {
+    failRefetchWith.current = undefined;
+  }, [queryResult.error]);
+
   // @todo: different response for the emit error
   // if (failRefetchWith.current) {
   //   return {
