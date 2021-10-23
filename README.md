@@ -2,38 +2,65 @@
 
 ## Background
 
-I love React Query and since I've been using it I didn't find a use for Redux
-anymore. Looking back, I find it _wrong_ to keep the reference data in the global
-app state, e.g. Redux store. I'm not saying that the Redux has no use anymore,
-but rather that it is designed to solve different problems than fetching data
-from APIs.
+While React Query is very feature rich, it misses one thing - support for streams, event emitters, WebSockets etc. This library leverages React Query's `useQuery` to provide `useSubscription` hook for subscribing to real-time data.
 
-While React Query is very feature rich, I miss one last bit in it - support for
-streams, event emitters, WebSockets etc.
+## General enough solution
 
-Therefore, I've attempted to create an additional React Query hook.
+React Query `useQuery`'s query function is _any_ function which returns a Promise. Similarly, `useSubscription`'s subscription function is _any_ function which returns an _Observable_.
 
 ## Use cases
 
 ### Subscribe to WebSocket
 
-```TypeScript
-
-```
+TODO
 
 ### Subscribe to Event source
 
 ```TypeScript
-const sse = new EventSource('/api/v1/sse');
+import { useSubscription } from 'react-query-use-subscription';
+import { fromEvent, merge, of } from 'rxjs';
+import { map, finalize, takeUntil, switchMap } from 'rxjs/operators';
 
-sse.addEventListener("notice", function(e) {
-    console.log(e.data)
-  })`
+function fromEventSource(url: string) {
+  const sse = new EventSource(url);
+
+  const message$ = fromEvent<{ data: string }>(sse, 'message').pipe(
+    map((event: MessageEvent<string>) => JSON.parse(event.data))
+  );
+  const error$ = fromEvent<{ data?: string }>(sse, 'error').pipe(
+    map((message) => JSON.parse(message?.data || 'null')),
+    map((data) => {
+      throw new Error(data?.errorMessage || 'Event Source Error');
+    })
+  );
+  const complete$ = fromEvent(sse, 'complete');
+
+  return merge(message$, error$).pipe(takeUntil(complete$));
+}
+
+function SseExample() {
+  const { data, isLoading, isError, error } = useSubscription(
+    'some-key',
+    () => fromEventSource('/api/v1/sse'),
+    {
+      // options
+    }
+  );
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (isError) {
+    return (
+      <div role="alert">
+        {error?.message || 'Unknown error'}
+      </div>
+    );
+  }
+  return <div>Data: {JSON.stringify(data)}</div>;
+}
 ```
 
-### User events ?
+<!-- ### User events
 
-## General enough solution
-
-React Query `useQuery`'s query function is any function which returns a Promise.
-Therefore, for `useSubscription` it looks natural to use Observables.
+TODO -->
