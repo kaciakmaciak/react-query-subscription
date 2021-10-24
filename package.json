@@ -36,6 +36,8 @@
     "stats": "open ./stats.html",
     "test": "jest",
     "test:watch": "jest --watch",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "lint-staged": "lint-staged",
     "semantic-release": "semantic-release"
   },
