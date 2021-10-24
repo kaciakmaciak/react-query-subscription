@@ -28,6 +28,7 @@
     "types"
   ],
   "scripts": {
+    "prepare": "husky install",
     "build": "npm run build:cjs && npm run build:esm && npm run build:umd && npm run build:types",
     "build:cjs": "rimraf ./lib && cross-env BABEL_ENV=commonjs babel --extensions .ts,.tsx --ignore ./src/**/tests/**/* ./src --out-dir lib",
     "build:esm": "rimraf ./es && babel --extensions .ts,.tsx --ignore ./src/**/tests/**/* ./src --out-dir es",
@@ -41,6 +42,11 @@
     "format:check": "prettier --check .",
     "lint-staged": "lint-staged",
     "semantic-release": "semantic-release"
+  },
+  "lint-staged": {
+    "src/**/!(__tests__)/*.{js,ts,jsx,tsx}": [
+      "npm run lint --fix"
+    ]
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0",
