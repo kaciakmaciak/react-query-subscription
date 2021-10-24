@@ -6,6 +6,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import replace from '@rollup/plugin-replace';
 import babel from '@rollup/plugin-babel';
 import { terser } from 'rollup-plugin-terser';
+import size from 'rollup-plugin-size';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires,no-undef
 const packageJson = require('./package.json');
@@ -88,6 +89,7 @@ export default inputSources
           commonjs(),
           peerDepsExternal(),
           terser(),
+          size(),
         ],
       },
     ]

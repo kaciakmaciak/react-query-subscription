@@ -90,6 +90,7 @@
     "rimraf": "3.0.2",
     "rollup": "2.52.6",
     "rollup-plugin-peer-deps-external": "2.2.4",
+    "rollup-plugin-size": "0.2.2",
     "rollup-plugin-terser": "7.0.2",
     "rxjs": "7.1.0",
     "semantic-release": "^17.4.7",
