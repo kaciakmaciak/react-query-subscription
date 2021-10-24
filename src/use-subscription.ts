@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import {
   QueryFunction,
   QueryKey,
-  QueryObserverBaseResult,
   useQuery,
   useQueryClient,
   UseQueryOptions,
@@ -22,32 +21,16 @@ export type UseSubscriptionOptions<
   UseQueryOptions<TSubscriptionFnData, TError, TData, TSubscriptionKey>,
   | 'enabled'
   | 'retry'
+  | 'retryOnMount'
   | 'select'
   | 'placeholderData'
 >;
 
-export interface SubscriptionEmitErrorResult<TData = unknown, TError = unknown>
-  extends QueryObserverBaseResult<TData, TError> {
-  data: TData;
-  error: TError;
-  isError: true;
-  isIdle: false;
-  isLoading: false;
-  isLoadingError: false;
-  isRefetchError: false;
-  isEmitError: true;
-  isSuccess: false;
-  status: 'error';
-}
-
-export type UseSubscriptionResult<TData = unknown, TError = unknown> =
-  | UseQueryResult<TData, TError>
-  | SubscriptionEmitErrorResult<TData, TError>;
+export type UseSubscriptionResult<TData = unknown, TError = unknown> = UseQueryResult<TData, TError>;
 
 /**
  * @todo: [ ] make sure all options are covered (or excluded)
  * @todo: [ ] make sure all callbacks are called appropriately
- * @todo: [ ] make sure the status is set to "error" when observable emits an error
  * @todo: [ ] hot observable
  * @todo: [ ] cold observable ?
  * @todo: [ ] react suspense
@@ -91,11 +74,11 @@ export function useSubscription<
     // as data are otherwise marked as fresh.
     // @todo: any
     (result as any).cancel = () => {
-      queryClient.invalidateQueries(subscriptionKey);
+      queryClient.invalidateQueries(queryKey);
     };
 
     // @todo: Skip subscription for SSR
-    cleanupSubscription(queryClient, subscriptionKey);
+    cleanupSubscription(queryClient, queryKey);
 
     const subscription = stream$
       .pipe(
@@ -105,11 +88,15 @@ export function useSubscription<
         }),
         catchError((error) => {
           failRefetchWith.current = error;
-          queryResult.refetch();
+          queryClient.setQueryData(queryKey, (data) => data, {
+            // To make the retryOnMount work
+            // @see: https://github.com/tannerlinsley/react-query/blob/9e414e8b4f3118b571cf83121881804c0b58a814/src/core/queryObserver.ts#L727
+            updatedAt: 0,
+          });
           return of(undefined);
         }),
         finalize(() => {
-          queryClient.invalidateQueries(subscriptionKey);
+          queryClient.invalidateQueries(queryKey);
         })
       )
       .subscribe();
@@ -128,8 +115,14 @@ export function useSubscription<
     TSubscriptionKey
   >(subscriptionKey, queryFn, {
     refetchOnWindowFocus: false,
-    staleTime: Infinity,
     ...options,
+    staleTime: Infinity,
+    refetchOnMount: true,
+    onError: () => {
+      // Once the error has been thrown, and a query result created (with error)
+      // cleanup the `failRefetchWith`.
+      failRefetchWith.current = undefined;
+    },
   });
 
   useEffect(() => {
@@ -149,23 +142,6 @@ export function useSubscription<
       }
     };
   }, [queryClient, subscriptionKey]);
-
-  // Fixes refetch and invalidate.
-  // Once the error has been thrown, and a query result created (with error)
-  // cleanup the `failRefetchWith`.
-  useEffect(() => {
-    failRefetchWith.current = undefined;
-  }, [queryResult.error]);
-
-  // @todo: different response for the emit error
-  // if (failRefetchWith.current) {
-  //   return {
-  //     ...queryResult,
-  //     isRefetchError: false,
-  //     isEmitError: true,
-  //     isPreviousData: true,
-  //   } as any; // @todo: types
-  // }
 
   return queryResult;
 }
