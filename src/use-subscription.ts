@@ -114,11 +114,13 @@ export function useSubscription<
     TData,
     TSubscriptionKey
   >(subscriptionKey, queryFn, {
-    refetchOnWindowFocus: false,
     retry: false,
     ...options,
     staleTime: Infinity,
+    refetchInterval: undefined,
     refetchOnMount: true,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
     onError: () => {
       // Once the error has been thrown, and a query result created (with error)
       // cleanup the `failRefetchWith`.
