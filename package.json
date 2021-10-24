@@ -24,12 +24,14 @@
   "files": [
     "dist",
     "lib",
-    "es"
+    "es",
+    "types"
   ],
   "scripts": {
     "build:cjs": "rimraf ./lib && cross-env BABEL_ENV=commonjs babel --extensions .ts,.tsx --ignore ./src/**/tests/**/* ./src --out-dir lib",
     "build:esm": "rimraf ./es && babel --extensions .ts,.tsx --ignore ./src/**/tests/**/* ./src --out-dir es",
     "build:umd": "rimraf ./dist && cross-env NODE_ENV=production rollup -c",
+    "build:types": "rimraf ./types && tsc --project ./tsconfig.types.json",
     "test": "jest",
     "test:watch": "jest --watch",
     "lint-staged": "lint-staged",
