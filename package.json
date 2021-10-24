@@ -1,5 +1,5 @@
 {
-  "name": "react-query-use-subscription",
+  "name": "react-query-subscription",
   "version": "0.0.0-development",
   "engines": {
     "node": ">=10.13.0"
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kaciakmaciak/react-query-use-subscription"
+    "url": "https://github.com/kaciakmaciak/react-query-subscription"
   },
   "license": "MIT",
   "publishConfig": {
@@ -18,7 +18,7 @@
   },
   "main": "lib/index.js",
   "module": "es/index.js",
-  "browser": "dist/react-query-use-subscription.umd.js",
+  "browser": "dist/react-query-subscription.umd.js",
   "types": "types/index.d.ts",
   "sideEffects": [],
   "files": [

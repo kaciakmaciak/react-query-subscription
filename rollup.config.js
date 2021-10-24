@@ -19,7 +19,7 @@ function onwarn(warning) {
 }
 
 const banner = `/**
- * react-query-use-subscription v${packageJson.version}
+ * react-query-subscription v${packageJson.version}
  */
 `;
 

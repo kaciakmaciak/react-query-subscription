@@ -6,7 +6,7 @@
     "emitDeclarationOnly": true,
     "noEmit": false,
     "paths": {
-      "react-query-use-subscription": ["./src/index.ts"]
+      "react-query-subscription": ["./src/index.ts"]
     }
   },
   "files": [

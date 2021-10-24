@@ -17,7 +17,7 @@ TODO
 ### Subscribe to Event source
 
 ```TypeScript
-import { useSubscription } from 'react-query-use-subscription';
+import { useSubscription } from 'react-query-subscription';
 import { fromEvent, merge, of } from 'rxjs';
 import { map, finalize, takeUntil, switchMap } from 'rxjs/operators';
 
