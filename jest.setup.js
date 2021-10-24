@@ -1,4 +1,4 @@
-import { setLogger } from 'react-query'
+import { setLogger } from 'react-query';
 import EventSource from 'eventsource';
 
 setLogger({

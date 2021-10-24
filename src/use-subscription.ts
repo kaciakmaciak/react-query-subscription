@@ -26,7 +26,10 @@ export type UseSubscriptionOptions<
   | 'placeholderData'
 >;
 
-export type UseSubscriptionResult<TData = unknown, TError = unknown> = UseQueryResult<TData, TError>;
+export type UseSubscriptionResult<
+  TData = unknown,
+  TError = unknown
+> = UseQueryResult<TData, TError>;
 
 /**
  * @todo: [ ] make sure all options are covered (or excluded)

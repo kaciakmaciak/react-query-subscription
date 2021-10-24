@@ -18,14 +18,14 @@ const globals = {
   react: 'React',
   'react-dom': 'ReactDOM',
   'react-query': 'ReactQuery',
-  'rxjs': 'rxjs',
+  rxjs: 'rxjs',
   'rxjs/operators': 'rxjs.operators',
-}
+};
 
 const inputSources = [
   ['src/index.ts', 'ReactQuerySubscription', 'react-query-subscription'],
-]
-const extensions = ['.js', '.jsx', '.es6', '.es', '.mjs', '.ts', '.tsx']
+];
+const extensions = ['.js', '.jsx', '.es6', '.es', '.mjs', '.ts', '.tsx'];
 
 const babelConfig = {
   extensions,
@@ -99,6 +99,6 @@ export default inputSources
           }),
         ],
       },
-    ]
+    ];
   })
   .flat();
