@@ -45,7 +45,11 @@
   },
   "lint-staged": {
     "src/**/!(__tests__)/*.{js,ts,jsx,tsx}": [
+      "pretty-quick --staged",
       "npm run lint --fix"
+    ],
+    "*.(md|html|json)": [
+      "pretty-quick --staged"
     ]
   },
   "peerDependencies": {
@@ -95,6 +99,7 @@
     "jest": "27.0.6",
     "lint-staged": "11.0.0",
     "prettier": "2.3.2",
+    "pretty-quick": "3.1.1",
     "react": "^17.0.2",
     "react-dom": "17.0.2",
     "react-error-boundary": "3.1.3",
