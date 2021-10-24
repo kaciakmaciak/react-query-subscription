@@ -115,6 +115,7 @@ export function useSubscription<
     TSubscriptionKey
   >(subscriptionKey, queryFn, {
     refetchOnWindowFocus: false,
+    retry: false,
     ...options,
     staleTime: Infinity,
     refetchOnMount: true,
