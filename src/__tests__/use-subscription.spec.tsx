@@ -96,7 +96,7 @@ describe('useSubscription', () => {
   });
 
   test('emitted error', async () => {
-    const testErrorSubscriptionFn = () =>
+    const testErrorSubscriptionFn = jest.fn(() =>
       interval(testInterval).pipe(
         map((n) => {
           if (n === 2) {
@@ -104,7 +104,7 @@ describe('useSubscription', () => {
           }
           return n;
         })
-      );
+      ));
 
     const { result, waitForNextUpdate } = renderHook(
       () => useSubscription(testSubscriptionKey, testErrorSubscriptionFn),
@@ -112,6 +112,8 @@ describe('useSubscription', () => {
     );
     expect(result.current.status).toBe('loading');
     expect(result.current.data).toBeUndefined();
+    expect(testErrorSubscriptionFn).toHaveBeenCalledTimes(1);
+    testErrorSubscriptionFn.mockClear();
 
     await waitForNextUpdate();
     expect(result.current.status).toBe('success');
@@ -126,6 +128,8 @@ describe('useSubscription', () => {
     expect(result.current.error).toEqual(new Error('Test Error'));
     expect(result.current.failureCount).toBe(1);
     expect(result.current.data).toBe(1);
+
+    expect(testErrorSubscriptionFn).not.toHaveBeenCalled();
   });
 
   it('should subscribe on mount', async () => {
@@ -582,16 +586,112 @@ describe('useSubscription', () => {
         );
         expect(result.current.status).toBe('loading');
         expect(result.current.data).toBeUndefined();
+        expect(testErrorSubscriptionFn).toHaveBeenCalledTimes(1);
+        testErrorSubscriptionFn.mockClear();
     
         await waitFor(() => {
           expect(result.current.status).toBe('error');
         }, { timeout: 10000 });
         expect(result.current.error).toEqual(new Error('Test Error'));
-         // the queryFn runs 3x but the subscriptionFn is called only once
+         // the queryFn runs 3x but the subscriptionFn is not called
         expect(result.current.failureCount).toBe(3);
         expect(result.current.data).toBe(1);
+        expect(testErrorSubscriptionFn).not.toHaveBeenCalled();
+      });
+    });
 
-        expect(testErrorSubscriptionFn).toHaveBeenCalledTimes(1);
+    describe('retryOnMount', () => {
+      const testErrorSubscriptionFn = () => {
+        throw new Error('Test Error');
+      };
+
+      const testStreamErrorSubscriptionFn = () =>
+      interval(testInterval).pipe(
+        map((n) => {
+          if (n === 2) {
+            throw new Error('Test Error');
+          }
+          return n;
+        })
+      );
+
+      it.each`
+        subscriptionFn                   | hasPreviousData | description
+        ${testErrorSubscriptionFn}       | ${false}        | ${`subscribe error`}
+        ${testStreamErrorSubscriptionFn} | ${true}         | ${`stream error`}
+      `('should retry previously failed subscription ($description)', async ({ subscriptionFn, hasPreviousData }) => {
+        const fn = jest.fn(() => subscriptionFn());
+        const firstHookRender = renderHook(
+          () =>
+            useSubscription(testSubscriptionKey, fn, {
+              retryOnMount: true,
+            }),
+          { wrapper: Wrapper }
+        );
+        await firstHookRender.waitFor(() => {
+          expect(firstHookRender.result.current.status).toBe('error');
+        });
+        expect(fn).toHaveBeenCalledTimes(1);
+        fn.mockClear();
+
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        const { result, unmount, waitFor } = renderHook(
+          () =>
+            useSubscription(testSubscriptionKey, fn, {
+              retryOnMount: true,
+            }),
+          { wrapper: Wrapper }
+        );
+        expect(result.current.status).toBe('loading');
+        if (hasPreviousData) {
+          expect(result.current.data).toBe(1);
+        } else {
+          expect(result.current.data).toBeUndefined();
+        }
+
+        await waitFor(() => {
+          expect(result.current.status).toBe('error');
+        });
+        expect(fn).toHaveBeenCalledTimes(1);
+
+        firstHookRender.unmount();
+        unmount();
+      });
+
+      it.each`
+        subscriptionFn                   | description
+        ${testErrorSubscriptionFn}       | ${`failed to subscribe`}
+        ${testStreamErrorSubscriptionFn} | ${`stream error`}
+      `('should not retry previously failed subscription ($description)', async ({ subscriptionFn }) => {
+        const fn = jest.fn(() => subscriptionFn());
+        const firstHookRender = renderHook(
+          () =>
+            useSubscription(testSubscriptionKey, fn, {
+              retryOnMount: false,
+            }),
+          { wrapper: Wrapper }
+        );
+        await firstHookRender.waitFor(() => {
+          expect(firstHookRender.result.current.status).toBe('error');
+        });
+        expect(fn).toHaveBeenCalledTimes(1);
+        fn.mockClear();
+
+        const { result, unmount } = renderHook(
+          () =>
+            useSubscription(testSubscriptionKey, fn, {
+              retryOnMount: false,
+            }),
+          { wrapper: Wrapper }
+        );
+        expect(result.current.status).toBe('error');
+
+        expect(fn).not.toHaveBeenCalled();
+        expect(result.current.status).toBe('error');
+
+        firstHookRender.unmount();
+        unmount();
       });
     });
 
