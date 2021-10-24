@@ -36,6 +36,7 @@
     "stats": "open ./stats.html",
     "test": "jest",
     "test:watch": "jest --watch",
+    "lint": "eslint src --ext js,jsx,ts,tsx",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint-staged": "lint-staged",
