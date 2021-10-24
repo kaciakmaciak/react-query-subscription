@@ -18,6 +18,8 @@ const globals = {
   react: 'React',
   'react-dom': 'ReactDOM',
   'react-query': 'ReactQuery',
+  'rxjs': 'rxjs',
+  'rxjs/operators': 'rxjs.operators',
 }
 
 const inputSources = [
