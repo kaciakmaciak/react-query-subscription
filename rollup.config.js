@@ -7,6 +7,7 @@ import replace from '@rollup/plugin-replace';
 import babel from '@rollup/plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 import size from 'rollup-plugin-size';
+import visualizer from 'rollup-plugin-visualizer';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires,no-undef
 const packageJson = require('./package.json');
@@ -90,6 +91,10 @@ export default inputSources
           peerDepsExternal(),
           terser(),
           size(),
+          visualizer({
+            filename: 'stats.json',
+            json: true,
+          }),
         ],
       },
     ]
