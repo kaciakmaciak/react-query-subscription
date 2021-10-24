@@ -19,11 +19,7 @@ export type UseSubscriptionOptions<
   TSubscriptionKey extends QueryKey = QueryKey
 > = Pick<
   UseQueryOptions<TSubscriptionFnData, TError, TData, TSubscriptionKey>,
-  | 'enabled'
-  | 'retry'
-  | 'retryOnMount'
-  | 'select'
-  | 'placeholderData'
+  'enabled' | 'retry' | 'retryOnMount' | 'select' | 'placeholderData'
 >;
 
 export type UseSubscriptionResult<
@@ -76,6 +72,7 @@ export function useSubscription<
     // If we do not invalidate the query, the hook will never re-subscribe,
     // as data are otherwise marked as fresh.
     // @todo: any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (result as any).cancel = () => {
       queryClient.invalidateQueries(queryKey);
     };
