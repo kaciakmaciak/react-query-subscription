@@ -8,6 +8,20 @@ While React Query is very feature rich, it misses one thing - support for stream
 
 React Query `useQuery`'s query function is _any_ function which returns a Promise. Similarly, `useSubscription`'s subscription function is _any_ function which returns an _Observable_.
 
+## Installation
+
+### NPM
+
+```sh
+npm install react-query-subscription react react-query@3 rxjs@7
+```
+
+or
+
+```sh
+yarn add react-query-subscription react react-query@3 rxjs@7
+```
+
 ## Use cases
 
 ### Subscribe to WebSocket
@@ -17,9 +31,22 @@ TODO
 ### Subscribe to Event source
 
 ```TypeScript
+import { QueryClientProvider, QueryClient } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 import { useSubscription } from 'react-query-subscription';
 import { fromEvent, merge, of } from 'rxjs';
 import { map, finalize, takeUntil, switchMap } from 'rxjs/operators';
+
+const queryClient = new QueryClient();
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <SseExample />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  );
+}
 
 function fromEventSource(url: string) {
   const sse = new EventSource(url);
