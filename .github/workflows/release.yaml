@@ -23,7 +23,15 @@ jobs:
         run: npm run lint
 
       - name: Unit tests
-        run: npm test
+        run: npm test -- --coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          directory: coverage
+          flags: unittests
+          name: react-query-subscription
 
       - name: Build package 📦
         run: npm run build
