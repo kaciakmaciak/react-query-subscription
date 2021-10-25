@@ -104,7 +104,8 @@ describe('useSubscription', () => {
           }
           return n;
         })
-      ));
+      )
+    );
 
     const { result, waitForNextUpdate } = renderHook(
       () => useSubscription(testSubscriptionKey, testErrorSubscriptionFn),
@@ -546,7 +547,7 @@ describe('useSubscription', () => {
         const testErrorSubscriptionFn = jest.fn(() => {
           throw new Error('Test Error');
         });
-    
+
         const { result, waitFor } = renderHook(
           () =>
             useSubscription(testSubscriptionKey, testErrorSubscriptionFn, {
@@ -557,9 +558,12 @@ describe('useSubscription', () => {
         expect(result.current.status).toBe('loading');
         expect(result.current.data).toBeUndefined();
 
-        await waitFor(() => {
-          expect(result.current.status).toBe('error');
-        }, { timeout: 10000 });
+        await waitFor(
+          () => {
+            expect(result.current.status).toBe('error');
+          },
+          { timeout: 10000 }
+        );
         expect(result.current.error).toEqual(new Error('Test Error'));
         expect(result.current.failureCount).toBe(3);
         expect(result.current.data).toBeUndefined();
@@ -575,8 +579,9 @@ describe('useSubscription', () => {
               }
               return n;
             })
-          ));
-    
+          )
+        );
+
         const { result, waitFor } = renderHook(
           () =>
             useSubscription(testSubscriptionKey, testErrorSubscriptionFn, {
@@ -588,12 +593,15 @@ describe('useSubscription', () => {
         expect(result.current.data).toBeUndefined();
         expect(testErrorSubscriptionFn).toHaveBeenCalledTimes(1);
         testErrorSubscriptionFn.mockClear();
-    
-        await waitFor(() => {
-          expect(result.current.status).toBe('error');
-        }, { timeout: 10000 });
+
+        await waitFor(
+          () => {
+            expect(result.current.status).toBe('error');
+          },
+          { timeout: 10000 }
+        );
         expect(result.current.error).toEqual(new Error('Test Error'));
-         // the queryFn runs 3x but the subscriptionFn is not called
+        // the queryFn runs 3x but the subscriptionFn is not called
         expect(result.current.failureCount).toBe(3);
         expect(result.current.data).toBe(1);
         expect(testErrorSubscriptionFn).not.toHaveBeenCalled();
@@ -606,93 +614,99 @@ describe('useSubscription', () => {
       };
 
       const testStreamErrorSubscriptionFn = () =>
-      interval(testInterval).pipe(
-        map((n) => {
-          if (n === 2) {
-            throw new Error('Test Error');
-          }
-          return n;
-        })
-      );
+        interval(testInterval).pipe(
+          map((n) => {
+            if (n === 2) {
+              throw new Error('Test Error');
+            }
+            return n;
+          })
+        );
 
       it.each`
         subscriptionFn                   | hasPreviousData | description
         ${testErrorSubscriptionFn}       | ${false}        | ${`subscribe error`}
         ${testStreamErrorSubscriptionFn} | ${true}         | ${`stream error`}
-      `('should retry previously failed subscription ($description)', async ({ subscriptionFn, hasPreviousData }) => {
-        const fn = jest.fn(() => subscriptionFn());
-        const firstHookRender = renderHook(
-          () =>
-            useSubscription(testSubscriptionKey, fn, {
-              retryOnMount: true,
-            }),
-          { wrapper: Wrapper }
-        );
-        await firstHookRender.waitFor(() => {
-          expect(firstHookRender.result.current.status).toBe('error');
-        });
-        expect(fn).toHaveBeenCalledTimes(1);
-        fn.mockClear();
+      `(
+        'should retry previously failed subscription ($description)',
+        async ({ subscriptionFn, hasPreviousData }) => {
+          const fn = jest.fn(() => subscriptionFn());
+          const firstHookRender = renderHook(
+            () =>
+              useSubscription(testSubscriptionKey, fn, {
+                retryOnMount: true,
+              }),
+            { wrapper: Wrapper }
+          );
+          await firstHookRender.waitFor(() => {
+            expect(firstHookRender.result.current.status).toBe('error');
+          });
+          expect(fn).toHaveBeenCalledTimes(1);
+          fn.mockClear();
 
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+          await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        const { result, unmount, waitFor } = renderHook(
-          () =>
-            useSubscription(testSubscriptionKey, fn, {
-              retryOnMount: true,
-            }),
-          { wrapper: Wrapper }
-        );
-        expect(result.current.status).toBe('loading');
-        if (hasPreviousData) {
-          expect(result.current.data).toBe(1);
-        } else {
-          expect(result.current.data).toBeUndefined();
+          const { result, unmount, waitFor } = renderHook(
+            () =>
+              useSubscription(testSubscriptionKey, fn, {
+                retryOnMount: true,
+              }),
+            { wrapper: Wrapper }
+          );
+          expect(result.current.status).toBe('loading');
+          if (hasPreviousData) {
+            expect(result.current.data).toBe(1);
+          } else {
+            expect(result.current.data).toBeUndefined();
+          }
+
+          await waitFor(() => {
+            expect(result.current.status).toBe('error');
+          });
+          expect(fn).toHaveBeenCalledTimes(1);
+
+          firstHookRender.unmount();
+          unmount();
         }
-
-        await waitFor(() => {
-          expect(result.current.status).toBe('error');
-        });
-        expect(fn).toHaveBeenCalledTimes(1);
-
-        firstHookRender.unmount();
-        unmount();
-      });
+      );
 
       it.each`
         subscriptionFn                   | description
         ${testErrorSubscriptionFn}       | ${`failed to subscribe`}
         ${testStreamErrorSubscriptionFn} | ${`stream error`}
-      `('should not retry previously failed subscription ($description)', async ({ subscriptionFn }) => {
-        const fn = jest.fn(() => subscriptionFn());
-        const firstHookRender = renderHook(
-          () =>
-            useSubscription(testSubscriptionKey, fn, {
-              retryOnMount: false,
-            }),
-          { wrapper: Wrapper }
-        );
-        await firstHookRender.waitFor(() => {
-          expect(firstHookRender.result.current.status).toBe('error');
-        });
-        expect(fn).toHaveBeenCalledTimes(1);
-        fn.mockClear();
+      `(
+        'should not retry previously failed subscription ($description)',
+        async ({ subscriptionFn }) => {
+          const fn = jest.fn(() => subscriptionFn());
+          const firstHookRender = renderHook(
+            () =>
+              useSubscription(testSubscriptionKey, fn, {
+                retryOnMount: false,
+              }),
+            { wrapper: Wrapper }
+          );
+          await firstHookRender.waitFor(() => {
+            expect(firstHookRender.result.current.status).toBe('error');
+          });
+          expect(fn).toHaveBeenCalledTimes(1);
+          fn.mockClear();
 
-        const { result, unmount } = renderHook(
-          () =>
-            useSubscription(testSubscriptionKey, fn, {
-              retryOnMount: false,
-            }),
-          { wrapper: Wrapper }
-        );
-        expect(result.current.status).toBe('error');
+          const { result, unmount } = renderHook(
+            () =>
+              useSubscription(testSubscriptionKey, fn, {
+                retryOnMount: false,
+              }),
+            { wrapper: Wrapper }
+          );
+          expect(result.current.status).toBe('error');
 
-        expect(fn).not.toHaveBeenCalled();
-        expect(result.current.status).toBe('error');
+          expect(fn).not.toHaveBeenCalled();
+          expect(result.current.status).toBe('error');
 
-        firstHookRender.unmount();
-        unmount();
-      });
+          firstHookRender.unmount();
+          unmount();
+        }
+      );
     });
 
     describe('select', () => {
