@@ -1,0 +1,31 @@
+{
+  "branches": ["master"],
+  "preset": "conventionalcommits",
+  "presetConfig": {
+    "types": [
+      { "type": "feat", "section": "✨ Features" },
+      { "type": "fix", "section": "🐛 Bug Fixes" },
+      { "type": "docs", "section": "📚 Documentation", "hidden": true },
+      { "type": "style", "section": "🎨 Formatting", "hidden": true },
+      { "type": "refactor", "section": "🔨 Refactors", "hidden": true },
+      { "type": "perf", "section": "⚡️ Performance" },
+      { "type": "test", "section": "🧪 Tests", "hidden": true },
+      { "type": "build", "section": "👷 Build System", "hidden": true },
+      {
+        "type": "ci",
+        "section": "💚 Continuous Integration",
+        "hidden": true
+      },
+      { "type": "chore", "section": "🍻 Chores", "hidden": true },
+      { "type": "revert", "section": "🔙 Reverts" }
+    ]
+  },
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/changelog",
+    "@semantic-release/npm",
+    "@semantic-release/git",
+    "@semantic-release/github"
+  ]
+}
