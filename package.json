@@ -52,6 +52,16 @@
       "pretty-quick --staged"
     ]
   },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0",
     "react-query": "^3.0.0",
