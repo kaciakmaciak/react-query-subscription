@@ -2,9 +2,15 @@
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+[all-contributors-badge]: https://img.shields.io/badge/all_contributors-1-orange.svg?style=round-square 'Number of contributors on All-Contributors'
 
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
+
+[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/kaciakmaciak/react-query-subscription?display_name=tag&sort=semver)](https://github.com/kaciakmaciak/react-query-subscription/releases)
+[![All Contributors][all-contributors-badge]](#contributors-)
+[![codecov](https://codecov.io/gh/kaciakmaciak/react-query-subscription/branch/master/graph/badge.svg)](https://codecov.io/gh/kaciakmaciak/react-query-subscription)
+[![npm bundle size](https://img.shields.io/bundlephobia/min/react-query-subscription)](https://www.npmjs.com/package/react-query-subscription)
+[![GitHub](https://img.shields.io/github/license/kaciakmaciak/react-query-subscription)](LICENSE)
 
 ## Background
 
