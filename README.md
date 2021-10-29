@@ -74,7 +74,12 @@ function fromEventSource(url: string) {
   );
   const complete$ = fromEvent(sse, 'complete');
 
-  return merge(message$, error$).pipe(takeUntil(complete$));
+  return merge(message$, error$).pipe(
+    takeUntil(complete$),
+    finalize(() => {
+      sse.close();
+    }),
+  );
 }
 
 function SseExample() {
