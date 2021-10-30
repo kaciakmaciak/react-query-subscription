@@ -2,7 +2,7 @@
 module.exports = {
   rootDir: 'src',
   setupFilesAfterEnv: ['@testing-library/jest-dom'],
-  collectCoverageFrom: ['**/*.{js,jsx,ts,tsx}'],
+  collectCoverageFrom: ['**/*.{js,jsx,ts,tsx}', '!**/__api-mocks__/**'],
   coverageDirectory: '<rootDir>/../coverage',
   setupFilesAfterEnv: ['<rootDir>/../jest.setup.ts'],
   testEnvironment: 'jsdom',
