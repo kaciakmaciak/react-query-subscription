@@ -48,9 +48,7 @@ TODO
 ```TypeScript
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { useSubscription } from 'react-query-subscription';
-import { fromEvent, merge, of } from 'rxjs';
-import { map, finalize, takeUntil, switchMap } from 'rxjs/operators';
+import { useSubscription, eventSource$ } from 'react-query-subscription';
 
 const queryClient = new QueryClient();
 
@@ -63,32 +61,10 @@ function App() {
   );
 }
 
-function fromEventSource(url: string) {
-  const sse = new EventSource(url);
-
-  const message$ = fromEvent<{ data: string }>(sse, 'message').pipe(
-    map((event: MessageEvent<string>) => JSON.parse(event.data))
-  );
-  const error$ = fromEvent<{ data?: string }>(sse, 'error').pipe(
-    map((message) => JSON.parse(message?.data || 'null')),
-    map((data) => {
-      throw new Error(data?.errorMessage || 'Event Source Error');
-    })
-  );
-  const complete$ = fromEvent(sse, 'complete');
-
-  return merge(message$, error$).pipe(
-    takeUntil(complete$),
-    finalize(() => {
-      sse.close();
-    }),
-  );
-}
-
 function SseExample() {
   const { data, isLoading, isError, error } = useSubscription(
     'some-key',
-    () => fromEventSource('/api/v1/sse'),
+    () => eventSource$('/api/v1/sse'),
     {
       // options
     }
