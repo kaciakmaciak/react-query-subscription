@@ -118,6 +118,7 @@
     "husky": "7.0.0",
     "jest": "27.0.6",
     "lint-staged": "11.0.0",
+    "msw": "0.35.0",
     "prettier": "2.3.2",
     "pretty-quick": "3.1.1",
     "react": "^17.0.2",
