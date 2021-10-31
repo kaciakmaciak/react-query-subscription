@@ -1,0 +1,79 @@
+<!DOCTYPE html><html class="default no-js"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>react-query-subscription - v1.2.0</title><meta name="description" content="Documentation for react-query-subscription - v1.2.0"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.body.classList.add(localStorage.getItem("tsd-theme") || "os")</script><header><div class="tsd-page-toolbar"><div class="container"><div class="table-wrap"><div class="table-cell" id="tsd-search" data-base="."><div class="field"><label for="tsd-search-field" class="tsd-widget search no-caption">Search</label><input type="text" id="tsd-search-field"/></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">react-query-subscription - v1.2.0</a></div><div class="table-cell" id="tsd-widgets"><div id="tsd-filter"><a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a><div class="tsd-filter-group"><div class="tsd-select" id="tsd-filter-visibility"><span class="tsd-select-label">All</span><ul class="tsd-select-list"><li data-value="public">Public</li><li data-value="protected">Public/Protected</li><li data-value="private" class="selected">All</li></ul></div> <input type="checkbox" id="tsd-filter-inherited" checked/><label class="tsd-widget" for="tsd-filter-inherited">Inherited</label></div></div><a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a></div></div></div></div><div class="tsd-page-title"><div class="container"><h1>react-query-subscription - v1.2.0</h1></div></div></header><div class="container container-main"><div class="row"><div class="col-8 col-content"><div class="tsd-panel tsd-typography">
+<a href="#react-query-usesubscription-hook" id="react-query-usesubscription-hook" style="color: inherit; text-decoration: none;">
+  <h1>React Query <code>useSubscription</code> hook</h1>
+</a>
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
+
+<p><a href="https://github.com/kaciakmaciak/react-query-subscription/releases"><img src="https://img.shields.io/github/v/release/kaciakmaciak/react-query-subscription?display_name=tag&sort=semver" alt="GitHub release (latest SemVer)"></a>
+<a href="#contributors-"><img src="https://img.shields.io/badge/all_contributors-1-orange.svg?style=round-square" alt="All Contributors" title="Number of contributors on All-Contributors"></a>
+<a href="https://codecov.io/gh/kaciakmaciak/react-query-subscription"><img src="https://codecov.io/gh/kaciakmaciak/react-query-subscription/branch/master/graph/badge.svg" alt="codecov"></a>
+<img src="https://img.shields.io/github/workflow/status/kaciakmaciak/react-query-subscription/CI" alt="GitHub Workflow Status">
+<img src="https://img.shields.io/snyk/vulnerabilities/github/kaciakmaciak/react-query-subscription" alt="Snyk Vulnerabilities for GitHub Repo">
+<img src="https://img.shields.io/badge/%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079" alt="Semantic release">
+<a href="https://www.npmjs.com/package/react-query-subscription"><img src="https://img.shields.io/bundlephobia/min/react-query-subscription" alt="npm bundle size"></a>
+<a href="LICENSE"><img src="https://img.shields.io/github/license/kaciakmaciak/react-query-subscription" alt="GitHub"></a></p>
+
+<a href="#background" id="background" style="color: inherit; text-decoration: none;">
+  <h2>Background</h2>
+</a>
+<p>While React Query is very feature rich, it misses one thing - support for streams, event emitters, WebSockets etc. This library leverages React Query&#39;s <code>useQuery</code> to provide <code>useSubscription</code> hook for subscribing to real-time data.</p>
+
+<a href="#general-enough-solution" id="general-enough-solution" style="color: inherit; text-decoration: none;">
+  <h2>General enough solution</h2>
+</a>
+<p>React Query <code>useQuery</code>&#39;s query function is <em>any</em> function which returns a Promise. Similarly, <code>useSubscription</code>&#39;s subscription function is <em>any</em> function which returns an <em>Observable</em>.</p>
+
+<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
+  <h2>Installation</h2>
+</a>
+
+<a href="#npm" id="npm" style="color: inherit; text-decoration: none;">
+  <h3>NPM</h3>
+</a>
+<pre><code class="language-sh"><span class="hl-1">npm install react-query-subscription react react-query@3 rxjs@7</span>
+</code></pre>
+<p>or</p>
+<pre><code class="language-sh"><span class="hl-1">yarn add react-query-subscription react react-query@3 rxjs@7</span>
+</code></pre>
+
+<a href="#use-cases" id="use-cases" style="color: inherit; text-decoration: none;">
+  <h2>Use cases</h2>
+</a>
+
+<a href="#subscribe-to-websocket" id="subscribe-to-websocket" style="color: inherit; text-decoration: none;">
+  <h3>Subscribe to WebSocket</h3>
+</a>
+<p>TODO</p>
+
+<a href="#subscribe-to-event-source" id="subscribe-to-event-source" style="color: inherit; text-decoration: none;">
+  <h3>Subscribe to Event source</h3>
+</a>
+<pre><code class="language-TypeScript"><span class="hl-6">import</span><span class="hl-1"> { </span><span class="hl-5">QueryClientProvider</span><span class="hl-1">, </span><span class="hl-5">QueryClient</span><span class="hl-1"> } </span><span class="hl-6">from</span><span class="hl-1"> </span><span class="hl-4">&#39;react-query&#39;</span><span class="hl-1">;</span><br/><span class="hl-6">import</span><span class="hl-1"> { </span><span class="hl-5">ReactQueryDevtools</span><span class="hl-1"> } </span><span class="hl-6">from</span><span class="hl-1"> </span><span class="hl-4">&#39;react-query/devtools&#39;</span><span class="hl-1">;</span><br/><span class="hl-6">import</span><span class="hl-1"> { </span><span class="hl-5">useSubscription</span><span class="hl-1">, </span><span class="hl-5">eventSource$</span><span class="hl-1"> } </span><span class="hl-6">from</span><span class="hl-1"> </span><span class="hl-4">&#39;react-query-subscription&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">queryClient</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">QueryClient</span><span class="hl-1">();</span><br/><br/><span class="hl-0">function</span><span class="hl-1"> </span><span class="hl-3">App</span><span class="hl-1">() {</span><br/><span class="hl-1">  </span><span class="hl-6">return</span><span class="hl-1"> (</span><br/><span class="hl-1">    &lt;</span><span class="hl-5">QueryClientProvider</span><span class="hl-1"> </span><span class="hl-5">client</span><span class="hl-1">={</span><span class="hl-5">queryClient</span><span class="hl-1">}&gt;</span><br/><span class="hl-1">      &lt;</span><span class="hl-5">SseExample</span><span class="hl-1"> /&gt;</span><br/><span class="hl-1">      &lt;</span><span class="hl-5">ReactQueryDevtools</span><span class="hl-1"> </span><span class="hl-5">initialIsOpen</span><span class="hl-1">={</span><span class="hl-5">false</span><span class="hl-1">} /&gt;</span><br/><span class="hl-1">    &lt;/</span><span class="hl-5">QueryClientProvider</span><span class="hl-1">&gt;</span><br/><span class="hl-1">  );</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-0">function</span><span class="hl-1"> </span><span class="hl-3">SseExample</span><span class="hl-1">() {</span><br/><span class="hl-1">  </span><span class="hl-0">const</span><span class="hl-1"> { </span><span class="hl-2">data</span><span class="hl-1">, </span><span class="hl-2">isLoading</span><span class="hl-1">, </span><span class="hl-2">isError</span><span class="hl-1">, </span><span class="hl-2">error</span><span class="hl-1"> } = </span><span class="hl-3">useSubscription</span><span class="hl-1">(</span><br/><span class="hl-1">    </span><span class="hl-4">&#39;some-key&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">    () </span><span class="hl-0">=&gt;</span><span class="hl-1"> </span><span class="hl-3">eventSource$</span><span class="hl-1">(</span><span class="hl-4">&#39;/api/v1/sse&#39;</span><span class="hl-1">),</span><br/><span class="hl-1">    {</span><br/><span class="hl-1">      </span><span class="hl-7">// options</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">  );</span><br/><br/><span class="hl-1">  </span><span class="hl-6">if</span><span class="hl-1"> (</span><span class="hl-5">isLoading</span><span class="hl-1">) {</span><br/><span class="hl-1">    </span><span class="hl-6">return</span><span class="hl-1"> &lt;</span><span class="hl-8">div</span><span class="hl-1">&gt;</span><span class="hl-5">Loading</span><span class="hl-1">...&lt;/</span><span class="hl-5">div</span><span class="hl-1">&gt;;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">  </span><span class="hl-6">if</span><span class="hl-1"> (</span><span class="hl-5">isError</span><span class="hl-1">) {</span><br/><span class="hl-1">    </span><span class="hl-6">return</span><span class="hl-1"> (</span><br/><span class="hl-1">      &lt;</span><span class="hl-5">div</span><span class="hl-1"> </span><span class="hl-5">role</span><span class="hl-1">=</span><span class="hl-4">&quot;alert&quot;</span><span class="hl-1">&gt;</span><br/><span class="hl-1">        {</span><span class="hl-5">error</span><span class="hl-1">?.</span><span class="hl-5">message</span><span class="hl-1"> || &#39;</span><span class="hl-5">Unknown</span><span class="hl-1"> </span><span class="hl-5">error</span><span class="hl-1">&#39;}</span><br/><span class="hl-1">      &lt;/</span><span class="hl-5">div</span><span class="hl-1">&gt;</span><br/><span class="hl-1">    );</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">  </span><span class="hl-6">return</span><span class="hl-1"> &lt;</span><span class="hl-8">div</span><span class="hl-1">&gt;</span><span class="hl-5">Data</span><span class="hl-1">: {JSON.stringify(data)}&lt;/</span><span class="hl-5">div</span><span class="hl-1">&gt;;</span><br/><span class="hl-1">}</span>
+</code></pre>
+<!-- ### User events
+
+TODO -->
+
+
+<a href="#contributors-✨" id="contributors-✨" style="color: inherit; text-decoration: none;">
+  <h2>Contributors ✨</h2>
+</a>
+<p>Thanks goes to these wonderful people (<a href="https://allcontributors.org/docs/en/emoji-key">emoji key</a>):</p>
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/kaciakmaciak"><img src="https://avatars.githubusercontent.com/u/17466633?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Katarina Anton</b></sub></a><br /><a href="https://github.com/kaciakmaciak/react-query-subscription/commits?author=kaciakmaciak" title="Code">💻</a> <a href="#ideas-kaciakmaciak" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-kaciakmaciak" title="Maintenance">🚧</a> <a href="https://github.com/kaciakmaciak/react-query-subscription/commits?author=kaciakmaciak" title="Tests">⚠️</a> <a href="#tool-kaciakmaciak" title="Tools">🔧</a> <a href="#infra-kaciakmaciak" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+<p>This project follows the <a href="https://github.com/all-contributors/all-contributors">all-contributors</a> specification. Contributions of any kind welcome!</p>
+</div></div><div class="col-4 col-menu menu-sticky-wrap menu-highlight"><nav class="tsd-navigation primary"><ul><li class="current"><a href="modules.html">Exports</a></li></ul></nav><nav class="tsd-navigation secondary menu-sticky"><ul><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/EventSourceOptions.html" class="tsd-kind-icon">Event<wbr/>Source<wbr/>Options</a></li><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/UseSubscriptionOptions.html" class="tsd-kind-icon">Use<wbr/>Subscription<wbr/>Options</a></li><li class="tsd-kind-function tsd-has-type-parameter"><a href="modules.html#eventSource_" class="tsd-kind-icon">event<wbr/>Source$</a></li><li class="tsd-kind-function tsd-has-type-parameter"><a href="modules.html#fromEventSource" class="tsd-kind-icon">from<wbr/>Event<wbr/>Source</a></li><li class="tsd-kind-function tsd-has-type-parameter"><a href="modules.html#useSubscription" class="tsd-kind-icon">use<wbr/>Subscription</a></li></ul></nav></div></div></div><footer class="with-border-bottom"><div class="container"><h2>Legend</h2><div class="tsd-legend-group"><ul class="tsd-legend"><li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li><li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li></ul></div><h2>Settings</h2><p>Theme <select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></p></div></footer><div class="container tsd-generator"><p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div><div class="overlay"></div><script src="assets/main.js"></script></body></html>
