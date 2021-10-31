@@ -26,6 +26,13 @@
   "module": "es/index.js",
   "unpkg": "dist/react-query-subscription.umd.js",
   "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "development": {
+        "import": "./src/index.ts"
+      }
+    }
+  },
   "sideEffects": [],
   "files": [
     "dist",
@@ -34,7 +41,8 @@
     "types"
   ],
   "workspaces": [
-    "examples/*"
+    ".",
+    "examples/**"
   ],
   "scripts": {
     "prepare": "husky install",
