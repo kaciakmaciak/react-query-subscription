@@ -10,5 +10,6 @@
   "excludeInternal": true,
   "excludeProtected": true,
   "excludePrivate": true,
-  "includeVersion": true
+  "includeVersion": true,
+  "out": "./gh-pages"
 }

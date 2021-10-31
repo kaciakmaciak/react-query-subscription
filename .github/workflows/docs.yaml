@@ -21,7 +21,7 @@ jobs:
           install-command: npm ci --ignore-scripts
 
       - name: Build Docs 🔧
-        run: npm run docs:pages --out ./gb-pages
+        run: npm run docs:pages
 
       - name: Deploy Docs 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4
