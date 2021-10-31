@@ -1,0 +1,14 @@
+{
+  "entryPoints": ["./src/index.ts"],
+  "exclude": [
+    "**/*.(spec|test).ts",
+    "__mocks__/**",
+    "__tests__/**",
+    "__api-mocks__/**"
+  ],
+  "excludeExternals": true,
+  "excludeInternal": true,
+  "excludeProtected": true,
+  "excludePrivate": true,
+  "includeVersion": true
+}
