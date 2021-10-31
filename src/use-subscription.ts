@@ -4,23 +4,50 @@ import {
   QueryKey,
   useQuery,
   useQueryClient,
-  UseQueryOptions,
   UseQueryResult,
+  PlaceholderDataFunction,
 } from 'react-query';
+import type { RetryValue } from 'react-query/types/core/retryer';
 import { Observable, of, firstValueFrom } from 'rxjs';
 import { catchError, finalize, share, tap, skip } from 'rxjs/operators';
 
 import { storeSubscription, cleanupSubscription } from './subscription-storage';
 
-export type UseSubscriptionOptions<
+export interface UseSubscriptionOptions<
   TSubscriptionFnData = unknown,
   TError = Error,
   TData = TSubscriptionFnData,
   TSubscriptionKey extends QueryKey = QueryKey
-> = Pick<
-  UseQueryOptions<TSubscriptionFnData, TError, TData, TSubscriptionKey>,
-  'enabled' | 'retry' | 'retryOnMount' | 'select' | 'placeholderData'
->;
+> {
+  /**
+   * Set this to `false` to disable automatic resubscribing when the subscription mounts or changes subscription keys.
+   * To refetch the subscription, use the `refetch` method returned from the `useSubscription` instance.
+   * Defaults to `true`.
+   */
+  enabled?: boolean;
+  /**
+   * If `false`, failed subscriptions will not retry by default.
+   * If `true`, failed subscriptions will retry infinitely., failureCount: num
+   * If set to an integer number, e.g. 3, failed subscriptions will retry until the failed subscription count meets that number.
+   * If set to a function `(failureCount, error) => boolean` failed subscriptions will retry until the function returns false.
+   */
+  retry?: RetryValue<TError>;
+  /**
+   * If set to `false`, the subscription will not be retried on mount if it contains an error.
+   * Defaults to `true`.
+   */
+  retryOnMount?: boolean;
+  /**
+   * This option can be used to transform or select a part of the data returned by the query function.
+   */
+  select?: (data: TSubscriptionFnData) => TData;
+  /**
+   * If set, this value will be used as the placeholder data for this particular query observer while the subscription is still in the `loading` data and no initialData has been provided.
+   */
+  placeholderData?:
+    | TSubscriptionFnData
+    | PlaceholderDataFunction<TSubscriptionFnData>;
+}
 
 export type UseSubscriptionResult<
   TData = unknown,
@@ -35,7 +62,7 @@ export type UseSubscriptionResult<
  * @todo: [ ] react suspense
  * @todo: [ ] SSR
  */
-export function useSubscription<
+ export function useSubscription<
   TSubscriptionFnData = unknown,
   TError = Error,
   TData = TSubscriptionFnData,
