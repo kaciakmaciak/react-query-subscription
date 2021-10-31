@@ -1,3 +1,10 @@
+## [1.2.0](https://github.com/kaciakmaciak/react-query-subscription/compare/v1.1.0...v1.2.0) (2021-10-31)
+
+
+### ✨ Features
+
+* **types:** export `UseSubscriptionOptions` and `EventSourceOptions` types ([3c497d8](https://github.com/kaciakmaciak/react-query-subscription/commit/3c497d8285784f0befa286b00edc1bbe46bc34b6))
+
 ## [1.1.0](https://github.com/kaciakmaciak/react-query-subscription/compare/v1.0.0...v1.1.0) (2021-10-30)
 
 
