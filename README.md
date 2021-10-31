@@ -15,6 +15,8 @@
 [![npm bundle size](https://img.shields.io/bundlephobia/min/react-query-subscription)](https://www.npmjs.com/package/react-query-subscription)
 [![GitHub](https://img.shields.io/github/license/kaciakmaciak/react-query-subscription)](LICENSE)
 
+[API Reference](https://kaciakmaciak.github.io/react-query-subscription/)
+
 ## Background
 
 While React Query is very feature rich, it misses one thing - support for streams, event emitters, WebSockets etc. This library leverages React Query's `useQuery` to provide `useSubscription` hook for subscribing to real-time data.
