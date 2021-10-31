@@ -41,7 +41,7 @@ jobs:
     name: 'Publish to NPM'
     runs-on: ubuntu-20.04
 
-    needs: lint-test-build
+    needs: [lint-test-build]
 
     steps:
       - uses: actions/checkout@v2
@@ -59,3 +59,31 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: npm run release
+
+  docs:
+    if: github.repository == 'kaciakmaciak/react-query-subscription'
+    name: 'Publish Docs'
+    runs-on: ubuntu-20.04
+
+    needs: [lint-test-build, release]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14.17'
+
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
+        with:
+          install-command: npm ci --ignore-scripts
+      - name: Build Docs 🔧
+        run: npm run docs:pages
+
+      - name: Deploy Docs 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          BRANCH: nodev/docs
+          FOLDER: gh-pages
+          CLEAN: true
