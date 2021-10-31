@@ -18,13 +18,15 @@ export interface EventSourceOptions<TData = unknown> {
  * Takes EventSource and creates an observable from it.
  *
  * @example
- *  const sse = new EventSource(url, configuration);
- *  return fromEventSource(sse).pipe(
- *    finalize(() => {
- *      // Make sure the EventSource is closed once not needed.
- *      sse.close();
- *    }),
- *  );
+ * ```ts
+ * const sse = new EventSource(url, configuration);
+ * return fromEventSource(sse).pipe(
+ *   finalize(() => {
+ *     // Make sure the EventSource is closed once not needed.
+ *     sse.close();
+ *   }),
+ * );
+ * ```
  */
 export function fromEventSource<TData = unknown>(
   sse: EventSource,
@@ -57,6 +59,16 @@ export function fromEventSource<TData = unknown>(
  * parsed event source data.
  * Opens the event source once subscribed.
  * Closes the event source, once unsubscribed.
+ *
+ * @example
+ * ```ts
+ * const sse$ = eventSource$('https://example.com/sse', {
+ *   withCredentials: true,
+ * });
+ * sse$.subscribe((data) => {
+ *   console.log(data);
+ * });
+ * ```
  */
 export function eventSource$<TData = unknown>(
   url: string,

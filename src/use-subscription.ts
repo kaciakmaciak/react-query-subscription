@@ -55,14 +55,34 @@ export type UseSubscriptionResult<
 > = UseQueryResult<TData, TError>;
 
 /**
- * @todo: [ ] make sure all options are covered (or excluded)
- * @todo: [ ] make sure all callbacks are called appropriately
- * @todo: [ ] hot observable
- * @todo: [ ] cold observable ?
- * @todo: [ ] react suspense
- * @todo: [ ] SSR
+ * React hook based on React Query for managing, caching and syncing observables in React.
+ *
+ * @example
+ * ```ts
+ * function ExampleSubscription() {
+ *   const { data, isError, error, isLoading } = useSubscription(
+ *     'test-key',
+ *     () => stream$,
+ *     {
+ *       // options
+ *     }
+ *   );
+ *
+ *   if (isLoading) {
+ *     return <>Loading...</>;
+ *   }
+ *   if (isError) {
+ *     return (
+ *       <div role="alert">
+ *         {error?.message || 'Unknown error'}
+ *       </div>
+ *     );
+ *   }
+ *   return <>Data: {JSON.stringify(data)}</>;
+ * }
+ * ```
  */
- export function useSubscription<
+export function useSubscription<
   TSubscriptionFnData = unknown,
   TError = Error,
   TData = TSubscriptionFnData,
