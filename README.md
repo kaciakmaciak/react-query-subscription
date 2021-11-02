@@ -17,6 +17,8 @@
 
 [API Reference](https://kaciakmaciak.github.io/react-query-subscription/)
 
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/kaciakmaciak/react-query-subscription)
+
 ## Background
 
 While React Query is very feature rich, it misses one thing - support for streams, event emitters, WebSockets etc. This library leverages React Query's `useQuery` to provide `useSubscription` hook for subscribing to real-time data.

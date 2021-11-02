@@ -1,0 +1,6 @@
+tasks:
+  - name: Unit tests
+    init: |
+      npm install
+      gp sync-done boot
+    command: npm run test:watch
