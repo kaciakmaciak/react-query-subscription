@@ -1,3 +1,10 @@
+## [1.3.0](https://github.com/kaciakmaciak/react-query-subscription/compare/v1.2.0...v1.3.0) (2021-11-02)
+
+
+### ✨ Features
+
+* **useSubscription:** add `retryDelay` option ([2648116](https://github.com/kaciakmaciak/react-query-subscription/commit/26481160b41aebab807798663834df5b16596954)), closes [#24](https://github.com/kaciakmaciak/react-query-subscription/issues/24)
+
 ## [1.2.0](https://github.com/kaciakmaciak/react-query-subscription/compare/v1.1.0...v1.2.0) (2021-10-31)
 
 
