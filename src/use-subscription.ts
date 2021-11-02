@@ -7,7 +7,10 @@ import {
   UseQueryResult,
   PlaceholderDataFunction,
 } from 'react-query';
-import type { RetryValue } from 'react-query/types/core/retryer';
+import type {
+  RetryDelayValue,
+  RetryValue,
+} from 'react-query/types/core/retryer';
 import { Observable, of, firstValueFrom } from 'rxjs';
 import { catchError, finalize, share, tap, skip } from 'rxjs/operators';
 
@@ -27,11 +30,17 @@ export interface UseSubscriptionOptions<
   enabled?: boolean;
   /**
    * If `false`, failed subscriptions will not retry by default.
-   * If `true`, failed subscriptions will retry infinitely., failureCount: num
+   * If `true`, failed subscriptions will retry infinitely.
    * If set to an integer number, e.g. 3, failed subscriptions will retry until the failed subscription count meets that number.
-   * If set to a function `(failureCount, error) => boolean` failed subscriptions will retry until the function returns false.
+   * If set to a function `(failureCount: number, error: TError) => boolean` failed subscriptions will retry until the function returns false.
    */
   retry?: RetryValue<TError>;
+  /**
+   * If number, applies delay before next attempt in milliseconds.
+   * If function, it receives a `retryAttempt` integer and the actual Error and returns the delay to apply before the next attempt in milliseconds.
+   * @see https://react-query.tanstack.com/reference/useQuery
+   */
+  retryDelay?: RetryDelayValue<TError>;
   /**
    * If set to `false`, the subscription will not be retried on mount if it contains an error.
    * Defaults to `true`.
