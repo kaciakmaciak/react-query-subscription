@@ -8,6 +8,7 @@
 
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/kaciakmaciak/react-query-subscription?display_name=tag&sort=semver)](https://github.com/kaciakmaciak/react-query-subscription/releases)
 [![All Contributors][all-contributors-badge]](#contributors-)
+[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-ready--to--code-908a85?logo=gitpod)](https://gitpod.io/#https://github.com/kaciakmaciak/react-query-subscription)
 [![codecov](https://codecov.io/gh/kaciakmaciak/react-query-subscription/branch/master/graph/badge.svg)](https://codecov.io/gh/kaciakmaciak/react-query-subscription)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/kaciakmaciak/react-query-subscription/CI)
 ![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/kaciakmaciak/react-query-subscription)
