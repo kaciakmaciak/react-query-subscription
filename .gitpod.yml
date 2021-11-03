@@ -4,3 +4,8 @@ tasks:
       npm install
       gp sync-done boot
     command: npm run test:watch
+
+vscode:
+  extensions:
+    - "esbenp.prettier-vscode"
+    - "dbaeumer.vscode-eslint"
