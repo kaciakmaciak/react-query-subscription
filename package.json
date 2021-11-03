@@ -48,13 +48,12 @@
     "test:watch": "jest --watch",
     "lint": "eslint src --ext js,jsx,ts,tsx",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "lint-staged": "lint-staged"
+    "format:check": "prettier --check ."
   },
   "lint-staged": {
     "src/**/!(__tests__)/*.{js,ts,jsx,tsx}": [
       "pretty-quick --staged",
-      "npm run lint --fix"
+      "npm run lint -- --fix"
     ],
     "*.(md|html|json)": [
       "pretty-quick --staged"
