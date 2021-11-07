@@ -95,6 +95,7 @@ function SseExample() {
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { useSubscription } from 'react-query-subscription';
+import { Observable } from 'rxjs';
 import { createClient } from 'graphql-ws';
 import type { Client, SubscribePayload } from 'graphql-ws';
 
