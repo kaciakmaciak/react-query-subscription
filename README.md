@@ -89,6 +89,88 @@ function SseExample() {
 }
 ```
 
+### GraphQL subscription using [`graphql-ws`](https://github.com/enisdenjo/graphql-ws)
+
+```TypeScript
+import { QueryClientProvider, QueryClient } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import { useSubscription } from 'react-query-subscription';
+import { createClient } from 'graphql-ws';
+import type { Client, SubscribePayload } from 'graphql-ws';
+
+const queryClient = new QueryClient();
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <GraphQlWsExample postId="abc123" />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  );
+}
+
+const client = createClient({ url: 'wss://example.com/graphql' });
+
+/**
+ * @see https://github.com/enisdenjo/graphql-ws#observable
+ */
+export function fromWsClientSubscription<TData = Record<string, unknown>>(
+  client: Client,
+  payload: SubscribePayload
+) {
+  return new Observable<TData | null>((observer) =>
+    client.subscribe<TData>(payload, {
+      next: (data) => observer.next(data.data),
+      error: (err) => observer.error(err),
+      complete: () => observer.complete(),
+    })
+  );
+}
+
+interface Props {
+  postId: string;
+}
+
+interface Comment {
+  id: string;
+  content: string;
+}
+
+function GraphQlWsExample({ postId }: Props) {
+  const { data, isLoading, isError, error } = useSubscription(
+    'some-key',
+    () => fromWsClientSubscription<{ comments: Array<Comment> }>({
+      query: `
+        subscription Comments($postId: ID!) {
+          comments(postId: $postId) {
+            id
+            content
+          }
+        }
+      `,
+      variables: {
+        postId,
+      },
+    }),
+    {
+      // options
+    }
+  );
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (isError) {
+    return (
+      <div role="alert">
+        {error?.message || 'Unknown error'}
+      </div>
+    );
+  }
+  return <div>Data: {JSON.stringify(data?.comments)}</div>;
+}
+```
+
 <!-- ### User events
 
 TODO -->
