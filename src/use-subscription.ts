@@ -47,6 +47,10 @@ export interface UseSubscriptionOptions<
    */
   retryOnMount?: boolean;
   /**
+   * This callback will fire if the subscription encounters an error and will be passed the error.
+   */
+  onError?: (error: TError) => void;
+  /**
    * This option can be used to transform or select a part of the data returned by the query function.
    */
   select?: (data: TSubscriptionFnData) => TData;
@@ -177,10 +181,12 @@ export function useSubscription<
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
-    onError: () => {
+    onError: (error: TError) => {
       // Once the error has been thrown, and a query result created (with error)
       // cleanup the `failRefetchWith`.
       failRefetchWith.current = undefined;
+
+      options.onError && options.onError(error);
     },
   });
 
