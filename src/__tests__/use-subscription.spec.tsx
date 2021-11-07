@@ -80,9 +80,13 @@ describe('useSubscription', () => {
     const testErrorSubscriptionFn = () => {
       throw new Error('Test Error');
     };
+    const onError = jest.fn();
 
     const { result, waitForNextUpdate } = renderHook(
-      () => useSubscription(testSubscriptionKey, testErrorSubscriptionFn),
+      () =>
+        useSubscription(testSubscriptionKey, testErrorSubscriptionFn, {
+          onError,
+        }),
       { wrapper: Wrapper }
     );
     expect(result.current.status).toBe('loading');
@@ -93,6 +97,8 @@ describe('useSubscription', () => {
     expect(result.current.error).toEqual(new Error('Test Error'));
     expect(result.current.failureCount).toBe(1);
     expect(result.current.data).toBeUndefined();
+    expect(onError).toHaveBeenCalledTimes(1);
+    expect(onError).toHaveBeenCalledWith(new Error('Test Error'));
   });
 
   test('emitted error', async () => {
@@ -106,9 +112,13 @@ describe('useSubscription', () => {
         })
       )
     );
+    const onError = jest.fn();
 
     const { result, waitForNextUpdate } = renderHook(
-      () => useSubscription(testSubscriptionKey, testErrorSubscriptionFn),
+      () =>
+        useSubscription(testSubscriptionKey, testErrorSubscriptionFn, {
+          onError,
+        }),
       { wrapper: Wrapper }
     );
     expect(result.current.status).toBe('loading');
@@ -129,6 +139,8 @@ describe('useSubscription', () => {
     expect(result.current.error).toEqual(new Error('Test Error'));
     expect(result.current.failureCount).toBe(1);
     expect(result.current.data).toBe(1);
+    expect(onError).toHaveBeenCalledTimes(1);
+    expect(onError).toHaveBeenCalledWith(new Error('Test Error'));
 
     expect(testErrorSubscriptionFn).not.toHaveBeenCalled();
   });
