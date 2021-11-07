@@ -1,3 +1,10 @@
+## [1.4.0](https://github.com/kaciakmaciak/react-query-subscription/compare/v1.3.0...v1.4.0) (2021-11-07)
+
+
+### ✨ Features
+
+* **useSubscription:** add `onError` option ([c102b7c](https://github.com/kaciakmaciak/react-query-subscription/commit/c102b7c771d3d2a894767fab28b531e9d3cf4ab5)), closes [#29](https://github.com/kaciakmaciak/react-query-subscription/issues/29)
+
 ## [1.3.0](https://github.com/kaciakmaciak/react-query-subscription/compare/v1.2.0...v1.3.0) (2021-11-02)
 
 
