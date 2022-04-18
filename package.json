@@ -101,7 +101,7 @@
     "babel-jest": "27.0.6",
     "conventional-changelog-conventionalcommits": "4.6.1",
     "cross-env": "7.0.3",
-    "cz-conventional-changelog": "3.3.0",
+    "cz-conventional-changelog": "3.0.1",
     "eslint": "7.29.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-config-standard": "16.0.3",
@@ -132,8 +132,8 @@
     "rollup-plugin-terser": "7.0.2",
     "rollup-plugin-visualizer": "5.5.2",
     "rxjs": "7.1.0",
-    "semantic-release": "^18.0.0",
-    "typedoc": "0.22.7",
+    "semantic-release": "19.0.2",
+    "typedoc": "0.22.15",
     "typescript": "4.3.5"
   }
 }
