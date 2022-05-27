@@ -60,6 +60,10 @@ export interface UseSubscriptionOptions<
   placeholderData?:
     | TSubscriptionFnData
     | PlaceholderDataFunction<TSubscriptionFnData>;
+  /**
+   * This function will fire any time the subscription successfully fetches new data or the cache is updated via setQueryData.
+   */
+  onSuccess?: (data: TData) => void;
 }
 
 export type UseSubscriptionResult<
@@ -125,15 +129,15 @@ export function useSubscription<
       throw failRefetchWith.current;
     }
 
+    type Result = Promise<TSubscriptionFnData> & { cancel?: () => void };
+
     const stream$ = subscriptionFn().pipe(share());
-    const result = firstValueFrom(stream$);
+    const result: Result = firstValueFrom(stream$);
 
     // Fixes scenario when component unmounts before first emit.
     // If we do not invalidate the query, the hook will never re-subscribe,
     // as data are otherwise marked as fresh.
-    // @todo: any
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (result as any).cancel = () => {
+    result.cancel = () => {
       queryClient.invalidateQueries(queryKey);
     };
 
