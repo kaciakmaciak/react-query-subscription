@@ -114,7 +114,7 @@
     "eslint-plugin-react": "7.24.0",
     "eslint-plugin-react-hooks": "4.2.0",
     "eslint-plugin-testing-library": "4.6.0",
-    "eventsource": "1.1.0",
+    "eventsource": "2.0.2",
     "husky": "7.0.0",
     "jest": "27.0.6",
     "lint-staged": "11.0.0",

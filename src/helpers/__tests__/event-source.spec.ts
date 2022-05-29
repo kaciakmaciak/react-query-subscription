@@ -27,9 +27,13 @@ describe('EventSource helpers', () => {
     requestListener.mockClear();
   });
 
+  function createAbsoluteUrl(relativePath: string): string {
+    return new URL(relativePath, window.location.href).toString();
+  }
+
   describe('eventSource$', () => {
     it('should emit values from event source', async () => {
-      const sse$ = eventSource$('/sse');
+      const sse$ = eventSource$(createAbsoluteUrl('/sse'));
       expect(await firstValueFrom(sse$.pipe(take(5), toArray())))
         .toMatchInlineSnapshot(`
         Array [
@@ -45,7 +49,7 @@ describe('EventSource helpers', () => {
     });
 
     it('should not open the EventSource until subscribed', async () => {
-      const sse$ = eventSource$('/sse');
+      const sse$ = eventSource$(createAbsoluteUrl('/sse'));
       expect(requestListener).not.toHaveBeenCalled();
 
       const promise = firstValueFrom(sse$.pipe(take(5), toArray()));
@@ -55,14 +59,14 @@ describe('EventSource helpers', () => {
     });
 
     it('should close the EventSource once unsubscribed', async () => {
-      const sse$ = eventSource$('/sse');
+      const sse$ = eventSource$(createAbsoluteUrl('/sse'));
       await firstValueFrom(sse$.pipe(take(5), toArray()));
 
       expect(closeSseSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should emit values from event source until error', async () => {
-      const sse$ = eventSource$('/sse/error');
+      const sse$ = eventSource$(createAbsoluteUrl('/sse/error'));
       expect(
         await firstValueFrom(
           sse$.pipe(
@@ -83,7 +87,7 @@ describe('EventSource helpers', () => {
 
     it('should fail to subscribe', async () => {
       expect.assertions(2);
-      const sse$ = eventSource$('/sse/network-error');
+      const sse$ = eventSource$(createAbsoluteUrl('/sse/network-error'));
       try {
         await firstValueFrom(sse$.pipe(take(5), toArray()));
       } catch (error) {
