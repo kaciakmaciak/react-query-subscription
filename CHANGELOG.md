@@ -1,3 +1,10 @@
+## [1.5.0](https://github.com/kaciakmaciak/react-query-subscription/compare/v1.4.0...v1.5.0) (2022-05-30)
+
+
+### ✨ Features
+
+* **useSubscription:** add `onData` option ([#34](https://github.com/kaciakmaciak/react-query-subscription/issues/34)) ([36a6859](https://github.com/kaciakmaciak/react-query-subscription/commit/36a68591a056be3afa2c396cc7aee9d9c2ac0ac3))
+
 ## [1.4.0](https://github.com/kaciakmaciak/react-query-subscription/compare/v1.3.0...v1.4.0) (2021-11-07)
 
 ### ✨ Features
