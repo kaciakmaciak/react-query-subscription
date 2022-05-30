@@ -76,6 +76,28 @@ describe('useSubscription', () => {
     expect(result.current.data).toBe(1);
   });
 
+  test('subscription data', async () => {
+    const onData = jest.fn();
+    const { result, waitForNextUpdate } = renderHook(
+      () =>
+        useSubscription(testSubscriptionKey, testSubscriptionFn, {
+          onData,
+        }),
+      { wrapper: Wrapper }
+    );
+    expect(result.current.data).toBeUndefined();
+
+    await waitForNextUpdate();
+    expect(result.current.data).toBe(0);
+    expect(onData).toHaveBeenCalledTimes(1);
+    expect(onData).toHaveBeenCalledWith(0);
+
+    await waitForNextUpdate();
+    expect(result.current.data).toBe(1);
+    expect(onData).toHaveBeenCalledTimes(2);
+    expect(onData).toHaveBeenCalledWith(1);
+  });
+
   test('subscription error', async () => {
     const testErrorSubscriptionFn = () => {
       throw new Error('Test Error');

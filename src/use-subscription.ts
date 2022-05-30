@@ -63,7 +63,7 @@ export interface UseSubscriptionOptions<
   /**
    * This function will fire any time the subscription successfully fetches new data or the cache is updated via setQueryData.
    */
-  onSuccess?: (data: TData) => void;
+  onData?: (data: TData) => void;
 }
 
 export type UseSubscriptionResult<
@@ -185,6 +185,7 @@ export function useSubscription<
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
+    onSuccess: options.onData,
     onError: (error: TError) => {
       // Once the error has been thrown, and a query result created (with error)
       // cleanup the `failRefetchWith`.
