@@ -1,9 +1,7 @@
 # React Query `useSubscription` hook
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-
-[all-contributors-badge]: https://img.shields.io/badge/all_contributors-1-orange.svg?style=round-square 'Number of contributors on All-Contributors'
-
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/kaciakmaciak/react-query-subscription?display_name=tag&sort=semver)](https://github.com/kaciakmaciak/react-query-subscription/releases)
@@ -186,6 +184,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tr>
     <td align="center"><a href="https://github.com/kaciakmaciak"><img src="https://avatars.githubusercontent.com/u/17466633?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Katarina Anton</b></sub></a><br /><a href="https://github.com/kaciakmaciak/react-query-subscription/commits?author=kaciakmaciak" title="Code">💻</a> <a href="#ideas-kaciakmaciak" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-kaciakmaciak" title="Maintenance">🚧</a> <a href="https://github.com/kaciakmaciak/react-query-subscription/commits?author=kaciakmaciak" title="Tests">⚠️</a> <a href="#tool-kaciakmaciak" title="Tools">🔧</a> <a href="#infra-kaciakmaciak" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
+    <td align="center"><a href="https://github.com/cabljac"><img src="https://avatars.githubusercontent.com/u/32874567?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Jacob Cable</b></sub></a><br /><a href="#infra-cabljac" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/kaciakmaciak/react-query-subscription/commits?author=cabljac" title="Tests">⚠️</a> <a href="https://github.com/kaciakmaciak/react-query-subscription/commits?author=cabljac" title="Code">💻</a></td>
   </tr>
 </table>
 
