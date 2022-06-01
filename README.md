@@ -1,7 +1,9 @@
 # React Query `useSubscription` hook
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
+
+[all-contributors-badge]: https://img.shields.io/badge/all_contributors-2-orange.svg?style=round-square 'Number of contributors on All-Contributors'
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/kaciakmaciak/react-query-subscription?display_name=tag&sort=semver)](https://github.com/kaciakmaciak/react-query-subscription/releases)
