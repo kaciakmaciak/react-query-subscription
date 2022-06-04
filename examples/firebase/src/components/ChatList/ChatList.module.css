@@ -1,0 +1,45 @@
+.Wrapper {
+  flex: 1 1 0;
+  padding: 0 2rem;
+  text-align: center;
+}
+
+.ChatList {
+  list-style: none;
+  margin: 2.5rem 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ChatListItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #efefef;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  color: #000;
+  box-shadow: inset 0 2rem 2rem -2rem rgba(0, 0, 0, 0.05),
+    inset 0 -2rem 2rem -2rem rgba(0, 0, 0, 0.05);
+}
+
+.ChatListItem .ChatName {
+  flex: 1 1 auto;
+  text-align: left;
+}
+
+.ChatListItem .AvatarStack {
+  display: flex;
+  flex-direction: row-reverse;
+  margin: -0.5rem 0 -0.5rem 1rem;
+}
+
+.ChatListItem .Avatar {
+  width: 2rem;
+  height: 2rem;
+  background-color: white;
+  margin-left: -1rem;
+}
