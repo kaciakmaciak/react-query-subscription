@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css?family=Red+Hat+Display:400,500,900&display=swap');
+
+:root {
+  --text-1: #333;
+  --text-2: #666;
+  --text-3: #999;
+  --line: #ccc;
+  --time-bg: #eee;
+  --background: #f7f7f7;
+}
+
+body,
+html {
+  font-family: Red hat Display, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  line-height: 1.25em;
+  letter-spacing: 0.025em;
+  color: var(--text-1);
+  background: var(--background);
+  margin: 0;
+}

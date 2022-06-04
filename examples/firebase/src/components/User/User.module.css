@@ -1,0 +1,35 @@
+.User {
+  position: relative;
+  margin-bottom: 1rem;
+  padding-left: 5rem;
+  height: 4.5rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.Bar {
+  flex-basis: 3.5rem;
+  flex-shrink: 0;
+  margin: 1rem;
+  box-sizing: border-box;
+}
+
+.User .Picture {
+  position: absolute;
+  left: 0;
+  box-shadow: 0 0 2rem rgba(0, 0, 0, 0.075),
+    0rem 1rem 1rem -1rem rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.User .Name {
+  font-weight: 500;
+  margin-bottom: 0.125rem;
+}
+
+.User .NameDetail {
+  font-size: 0.9rem;
+  color: var(--text-3);
+}

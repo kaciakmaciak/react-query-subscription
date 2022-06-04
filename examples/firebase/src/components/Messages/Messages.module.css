@@ -1,0 +1,88 @@
+.Messages {
+  display: flex;
+  flex-direction: column-reverse;
+  padding: 1rem;
+  background: var(--background);
+  flex-shrink: 2;
+  overflow-y: auto;
+  height: 100%;
+
+  box-shadow: inset 0 2rem 2rem -2rem rgba(0, 0, 0, 0.05),
+    inset 0 -2rem 2rem -2rem rgba(0, 0, 0, 0.05);
+}
+
+.Status {
+  margin: 1rem auto;
+}
+
+.Message {
+  display: grid;
+  grid-template-columns: min-content auto;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    'avatar title'
+    'message message';
+  margin: 1rem 0;
+}
+.Message.Us {
+  grid-template-columns: auto min-content;
+  grid-template-areas:
+    'title avatar'
+    'message message';
+}
+
+.Message .Picture {
+  grid-area: avatar;
+  background-color: #fff;
+  width: 2rem;
+  height: 2rem;
+  box-shadow: 0 0 2rem rgba(0, 0, 0, 0.075),
+    0rem 1rem 1rem -1rem rgba(0, 0, 0, 0.1);
+}
+
+.MessageTitle {
+  grid-area: title;
+  align-self: center;
+  padding: 0 0.5rem;
+  font-weight: 500;
+}
+.Us .MessageTitle {
+  justify-self: end;
+}
+
+.MessageText {
+  grid-area: message;
+}
+.Us .MessageText {
+  justify-self: end;
+}
+
+.MessageTime {
+  font-size: 0.8rem;
+  background: var(--time-bg);
+  padding: 0.25rem 1rem;
+  border-radius: 2rem;
+  color: var(--text-3);
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.MessageText {
+  box-sizing: border-box;
+  padding: 0.5rem 1rem;
+  margin: 1rem;
+  background: #fff;
+  border-radius: 0 1.125rem 1.125rem 1.125rem;
+  min-height: 2.25rem;
+  width: fit-content;
+  max-width: 66%;
+
+  box-shadow: 0 0 2rem rgba(0, 0, 0, 0.075),
+    0rem 1rem 1rem -1rem rgba(0, 0, 0, 0.1);
+}
+
+.Us .MessageText {
+  border-radius: 1.125rem 0 1.125rem 1.125rem;
+  background: var(--text-1);
+  color: white;
+}
