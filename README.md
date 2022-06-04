@@ -44,6 +44,8 @@ yarn add react-query-subscription react react-query@3 rxjs@7
 
 ## Use cases
 
+Please see [examples](./examples/README.md).
+
 ### Subscribe to WebSocket
 
 TODO

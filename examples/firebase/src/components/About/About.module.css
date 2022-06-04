@@ -1,0 +1,10 @@
+.About {
+  max-width: 80%;
+}
+
+.About code {
+  display: inline-block;
+  background-color: #fff;
+  border-radius: 2px;
+  padding: 2px 0.25rem;
+}

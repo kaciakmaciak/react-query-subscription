@@ -1,0 +1,38 @@
+.NewMessage {
+  box-sizing: border-box;
+  flex-basis: 4rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.NewMessage i {
+  font-size: 1.5rem;
+  margin-right: 1rem;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: color 200ms;
+}
+.NewMessage i:hover {
+  color: var(--text-1);
+}
+
+.NewMessage input {
+  border: none;
+  background-image: none;
+  background-color: white;
+  padding: 0.5rem 1rem;
+  margin-right: 1rem;
+  border-radius: 1.125rem;
+  flex-grow: 2;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1),
+    0rem 1rem 1rem -1rem rgba(0, 0, 0, 0.2);
+
+  font-family: Red hat Display, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.025em;
+}
+
+.NewMessage input:placeholder {
+  color: var(--text-3);
+}
