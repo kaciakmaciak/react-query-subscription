@@ -1,3 +1,10 @@
+### [1.5.1](https://github.com/kaciakmaciak/react-query-subscription/compare/v1.5.0...v1.5.1) (2022-06-24)
+
+
+### 🐛 Bug Fixes
+
+* **npm:** fix UMD build ([78d4fb8](https://github.com/kaciakmaciak/react-query-subscription/commit/78d4fb8cec48f9cc8b92925a8221e73d12de2909)), closes [#51](https://github.com/kaciakmaciak/react-query-subscription/issues/51)
+
 ## [1.5.0](https://github.com/kaciakmaciak/react-query-subscription/compare/v1.4.0...v1.5.0) (2022-05-30)
 
 
