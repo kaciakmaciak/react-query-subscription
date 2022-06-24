@@ -24,7 +24,7 @@
   },
   "main": "lib/index.js",
   "module": "es/index.js",
-  "browser": "dist/react-query-subscription.umd.js",
+  "unpkg": "dist/react-query-subscription.umd.js",
   "types": "types/index.d.ts",
   "sideEffects": [],
   "files": [
