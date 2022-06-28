@@ -1,5 +1,8 @@
 {
-  "branches": ["master"],
+  "branches": [
+    { "name": "master" },
+    { "name": "beta", "channel": "beta", "prerelease": true }
+  ],
   "preset": "conventionalcommits",
   "presetConfig": {
     "types": [
