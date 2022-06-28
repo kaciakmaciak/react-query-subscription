@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - beta
 
 jobs:
   lint-test-build:
@@ -64,7 +65,7 @@ jobs:
         run: npm run release
 
   docs:
-    if: github.repository == 'kaciakmaciak/react-query-subscription'
+    if: github.repository == 'kaciakmaciak/react-query-subscription' && github.ref == 'refs/heads/master'
     name: 'Publish Docs'
     runs-on: ubuntu-20.04
 
