@@ -13,7 +13,8 @@ type SubscriptionStorage = Map<string, SubscriptionStorageItem>;
 export function storeSubscription<TSubscriptionKey extends QueryKey = QueryKey>(
   queryClient: QueryClient,
   subscriptionKey: TSubscriptionKey,
-  subscription: Subscription
+  subscription: Subscription,
+  pageParam?: string
 ) {
   const activeSubscriptions: SubscriptionStorage =
     queryClient.getQueryData(clientCacheSubscriptionsKey) || new Map();
@@ -23,10 +24,10 @@ export function storeSubscription<TSubscriptionKey extends QueryKey = QueryKey>(
 
   let newSubscriptionValue: SubscriptionStorageItem;
   if (previousSubscription) {
-    previousSubscription.set(defaultKey, subscription);
+    previousSubscription.set(pageParam ?? defaultKey, subscription);
     newSubscriptionValue = previousSubscription;
   } else {
-    newSubscriptionValue = new Map([[defaultKey, subscription]]);
+    newSubscriptionValue = new Map([[pageParam ?? defaultKey, subscription]]);
   }
 
   activeSubscriptions.set(hashedSubscriptionKey, newSubscriptionValue);
@@ -39,7 +40,11 @@ export function storeSubscription<TSubscriptionKey extends QueryKey = QueryKey>(
  */
 export function cleanupSubscription<
   TSubscriptionKey extends QueryKey = QueryKey
->(queryClient: QueryClient, subscriptionKey: TSubscriptionKey) {
+>(
+  queryClient: QueryClient,
+  subscriptionKey: TSubscriptionKey,
+  pageParam?: string
+) {
   const activeSubscriptions: SubscriptionStorage =
     queryClient.getQueryData(clientCacheSubscriptionsKey) || new Map();
 
@@ -52,10 +57,16 @@ export function cleanupSubscription<
     subscription.unsubscribe();
   });
 
-  subscription.forEach((subscription) => {
-    subscription.unsubscribe();
-  });
-  activeSubscriptions.delete(hashedSubscriptionKey);
+  if (pageParam === undefined) {
+    subscription.forEach((subscription) => {
+      subscription.unsubscribe();
+    });
+    activeSubscriptions.delete(hashedSubscriptionKey);
+  } else {
+    subscription.get(pageParam)?.unsubscribe();
+    subscription.delete(pageParam);
+    activeSubscriptions.set(hashedSubscriptionKey, subscription);
+  }
 
   queryClient.setQueryData(clientCacheSubscriptionsKey, activeSubscriptions);
 }
