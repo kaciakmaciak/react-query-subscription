@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react';
-import {
+import { useQuery, useQueryClient } from 'react-query';
+import type {
   QueryFunction,
   QueryKey,
-  useQuery,
-  useQueryClient,
   UseQueryResult,
+  QueryFunctionContext,
   PlaceholderDataFunction,
 } from 'react-query';
 import type {
@@ -106,7 +106,9 @@ export function useSubscription<
   TSubscriptionKey extends QueryKey = QueryKey
 >(
   subscriptionKey: TSubscriptionKey,
-  subscriptionFn: () => Observable<TSubscriptionFnData>,
+  subscriptionFn: (
+    context: QueryFunctionContext<TSubscriptionKey>
+  ) => Observable<TSubscriptionFnData>,
   options: UseSubscriptionOptions<
     TSubscriptionFnData,
     TError,
@@ -122,16 +124,18 @@ export function useSubscription<
   // @todo: move from the component scope to queryCache
   const failRefetchWith = useRef<false | Error>(false);
 
-  const queryFn: QueryFunction<TSubscriptionFnData, TSubscriptionKey> = ({
-    queryKey,
-  }) => {
+  const queryFn: QueryFunction<TSubscriptionFnData, TSubscriptionKey> = (
+    context
+  ) => {
+    const { queryKey } = context;
+
     if (failRefetchWith.current) {
       throw failRefetchWith.current;
     }
 
     type Result = Promise<TSubscriptionFnData> & { cancel?: () => void };
 
-    const stream$ = subscriptionFn().pipe(share());
+    const stream$ = subscriptionFn(context).pipe(share());
     const result: Result = firstValueFrom(stream$);
 
     // Fixes scenario when component unmounts before first emit.
@@ -189,7 +193,7 @@ export function useSubscription<
     onError: (error: TError) => {
       // Once the error has been thrown, and a query result created (with error)
       // cleanup the `failRefetchWith`.
-      failRefetchWith.current = undefined;
+      failRefetchWith.current = false;
 
       options.onError && options.onError(error);
     },
