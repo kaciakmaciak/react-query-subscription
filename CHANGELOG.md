@@ -1,3 +1,10 @@
+## [1.6.0-beta.2](https://github.com/kaciakmaciak/react-query-subscription/compare/v1.6.0-beta.1...v1.6.0-beta.2) (2022-07-02)
+
+
+### 🐛 Bug Fixes
+
+* **useInfiniteSubscription:** fix unsubscribing when previous/next page has been fetched ([fef6b3f](https://github.com/kaciakmaciak/react-query-subscription/commit/fef6b3fd8cb54615fd6b7eb153266b5696f0318b))
+
 ## [1.6.0-beta.1](https://github.com/kaciakmaciak/react-query-subscription/compare/v1.5.1...v1.6.0-beta.1) (2022-07-02)
 
 
