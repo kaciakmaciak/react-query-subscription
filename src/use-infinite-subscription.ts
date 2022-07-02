@@ -78,7 +78,7 @@ export interface UseInfiniteSubscriptionOptions<
   onData?: (data: InfiniteData<TData>) => void;
 }
 
-export type UseSubscriptionResult<
+export type UseInfiniteSubscriptionResult<
   TData = unknown,
   TError = unknown
 > = UseInfiniteQueryResult<TData, TError>;
@@ -160,14 +160,14 @@ export function useInfiniteSubscription<
     TData,
     TSubscriptionKey
   > = {}
-): UseSubscriptionResult<TData, TError> {
+): UseInfiniteSubscriptionResult<TData, TError> {
   const { queryFn, clearErrors } = useObservableQueryFn(
     subscriptionFn,
     (data, previousData, pageParam): InfiniteData<TSubscriptionFnData> => {
       if (!isInfiniteData(previousData)) {
         return {
           pages: [data],
-          pageParams: [undefined],
+          pageParams: [pageParam],
         };
       }
       const pageIndex = previousData.pageParams.findIndex(
