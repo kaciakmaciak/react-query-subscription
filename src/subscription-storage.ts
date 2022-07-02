@@ -53,10 +53,6 @@ export function cleanupSubscription<
 
   if (!subscription) return;
 
-  subscription.forEach((subscription) => {
-    subscription.unsubscribe();
-  });
-
   if (pageParam === undefined) {
     subscription.forEach((subscription) => {
       subscription.unsubscribe();
