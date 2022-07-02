@@ -117,7 +117,7 @@ export function useSubscription<
 ): UseSubscriptionResult<TData, TError> {
   const { queryFn, clearErrors } = useObservableQueryFn(
     subscriptionFn,
-    (data) => data // @todo move outside of the component
+    (data) => data
   );
 
   const queryClient = useQueryClient();
