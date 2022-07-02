@@ -26,7 +26,11 @@ export function useObservableQueryFn<
   subscriptionFn: (
     context: QueryFunctionContext<TSubscriptionKey>
   ) => Observable<TSubscriptionFnData>,
-  dataUpdater: (data: TSubscriptionFnData, previousData: unknown) => TCacheData
+  dataUpdater: (
+    data: TSubscriptionFnData,
+    previousData: unknown,
+    pageParam: unknown | undefined
+  ) => TCacheData
 ): UseObservableQueryFnResult<TSubscriptionFnData, TSubscriptionKey> {
   const queryClient = useQueryClient();
 
@@ -65,7 +69,7 @@ export function useObservableQueryFn<
         skip(1),
         tap((data) => {
           queryClient.setQueryData(queryKey, (previousData) =>
-            dataUpdater(data, previousData)
+            dataUpdater(data, previousData, pageParam)
           );
         }),
         catchError((error) => {
