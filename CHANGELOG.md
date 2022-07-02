@@ -1,3 +1,11 @@
+## [1.6.0-beta.1](https://github.com/kaciakmaciak/react-query-subscription/compare/v1.5.1...v1.6.0-beta.1) (2022-07-02)
+
+
+### ✨ Features
+
+* **useInfiniteSubscription:** add `useInfiniteSubscription` hook ([d1d1da1](https://github.com/kaciakmaciak/react-query-subscription/commit/d1d1da1635559455f850ab136a34edafecba91fd)), closes [#55](https://github.com/kaciakmaciak/react-query-subscription/issues/55)
+* **useSubscription:** pass `queryKey` to  `subscriptionFn` ([aff5e3e](https://github.com/kaciakmaciak/react-query-subscription/commit/aff5e3eefb9865ea6c16bd879d41853bf3db8c7a))
+
 ### [1.5.1](https://github.com/kaciakmaciak/react-query-subscription/compare/v1.5.0...v1.5.1) (2022-06-24)
 
 
