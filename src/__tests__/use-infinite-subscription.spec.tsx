@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderHook } from '@testing-library/react-hooks';
 import { Subject } from 'rxjs';
-import { map, finalize } from 'rxjs/operators';
+import { finalize, filter } from 'rxjs/operators';
 import { QueryClient, QueryClientProvider, QueryCache } from 'react-query';
 
 import { useInfiniteSubscription } from '../use-infinite-subscription';
@@ -37,7 +37,7 @@ describe('useInfiniteSubscription', () => {
     const finalizeFn = jest.fn();
     const subscriptionFn = jest.fn(({ pageParam = 0 }) =>
       testSubject.asObservable().pipe(
-        map((data) => pageParam * 10 + data),
+        filter((data) => data >= pageParam * 10 && data < (pageParam + 1) * 10),
         finalize(finalizeFn)
       )
     );
@@ -90,7 +90,7 @@ describe('useInfiniteSubscription', () => {
         expect(result.current.data).toEqual(mapToPages(1));
         expect(result.current.status).toBe('success');
 
-        next(2);
+        next(12);
         await waitForNextUpdate();
         expect(result.current.isFetchingNextPage).toBe(false);
         expect(result.current.status).toBe('success');
@@ -107,7 +107,7 @@ describe('useInfiniteSubscription', () => {
         await waitForNextUpdate();
         expect(result.current.isFetchingNextPage).toBe(true);
 
-        next(3);
+        next(23);
         await waitForNextUpdate();
         expect(result.current.isFetchingNextPage).toBe(false);
         expect(result.current.status).toBe('success');
@@ -153,6 +153,61 @@ describe('useInfiniteSubscription', () => {
         expect(result.current.status).toBe('success');
         expect(result.current.data).toEqual(mapToPages(2));
       });
+
+      test('updating previously subscribed pages', async () => {
+        const { subscriptionFn, next } = subscriptionFnFactory();
+
+        const getNextPageParam = jest.fn(
+          (_lastPage, allPages) => allPages.length
+        );
+        const { result, waitForNextUpdate } = renderHook(
+          () =>
+            useInfiniteSubscription(testSubscriptionKey, subscriptionFn, {
+              getNextPageParam,
+            }),
+          { wrapper: Wrapper }
+        );
+
+        next(1);
+        await waitForNextUpdate();
+        expect(result.current.status).toBe('success');
+        expect(result.current.data).toEqual(mapToPages(1));
+
+        expect(result.current.hasNextPage).toBe(true);
+
+        result.current.fetchNextPage();
+        await waitForNextUpdate();
+        expect(result.current.isFetchingNextPage).toBe(true);
+        expect(result.current.data).toEqual(mapToPages(1));
+        expect(result.current.status).toBe('success');
+
+        next(12);
+        await waitForNextUpdate();
+        expect(result.current.isFetchingNextPage).toBe(false);
+        expect(result.current.status).toBe('success');
+        expect(result.current.data).toEqual({
+          pageParams: [undefined, 1],
+          pages: [1, 12],
+        });
+
+        next(2);
+        await waitForNextUpdate();
+        expect(result.current.isFetchingNextPage).toBe(false);
+        expect(result.current.status).toBe('success');
+        expect(result.current.data).toEqual({
+          pageParams: [undefined, 1],
+          pages: [2, 12],
+        });
+
+        next(13);
+        await waitForNextUpdate();
+        expect(result.current.isFetchingNextPage).toBe(false);
+        expect(result.current.status).toBe('success');
+        expect(result.current.data).toEqual({
+          pageParams: [undefined, 1],
+          pages: [2, 13],
+        });
+      });
     });
 
     describe('getPreviousPageParam', () => {
@@ -189,7 +244,7 @@ describe('useInfiniteSubscription', () => {
         expect(result.current.data).toEqual(mapToPages(1));
         expect(result.current.status).toBe('success');
 
-        next(2);
+        next(12);
         await waitForNextUpdate();
         expect(result.current.isFetchingPreviousPage).toBe(false);
         expect(result.current.status).toBe('success');
@@ -206,7 +261,7 @@ describe('useInfiniteSubscription', () => {
         await waitForNextUpdate();
         expect(result.current.isFetchingPreviousPage).toBe(true);
 
-        next(3);
+        next(23);
         await waitForNextUpdate();
         expect(result.current.isFetchingPreviousPage).toBe(false);
         expect(result.current.status).toBe('success');
@@ -251,6 +306,61 @@ describe('useInfiniteSubscription', () => {
         expect(result.current.isFetchingPreviousPage).toBe(false);
         expect(result.current.status).toBe('success');
         expect(result.current.data).toEqual(mapToPages(2));
+      });
+
+      test('updating previously subscribed pages', async () => {
+        const { subscriptionFn, next } = subscriptionFnFactory();
+
+        const getPreviousPageParam = jest.fn(
+          (_lastPage, allPages) => allPages.length
+        );
+        const { result, waitForNextUpdate } = renderHook(
+          () =>
+            useInfiniteSubscription(testSubscriptionKey, subscriptionFn, {
+              getPreviousPageParam,
+            }),
+          { wrapper: Wrapper }
+        );
+
+        next(1);
+        await waitForNextUpdate();
+        expect(result.current.status).toBe('success');
+        expect(result.current.data).toEqual(mapToPages(1));
+
+        expect(result.current.hasPreviousPage).toBe(true);
+
+        result.current.fetchPreviousPage();
+        await waitForNextUpdate();
+        expect(result.current.isFetchingPreviousPage).toBe(true);
+        expect(result.current.data).toEqual(mapToPages(1));
+        expect(result.current.status).toBe('success');
+
+        next(12);
+        await waitForNextUpdate();
+        expect(result.current.isFetchingPreviousPage).toBe(false);
+        expect(result.current.status).toBe('success');
+        expect(result.current.data).toEqual({
+          pageParams: [1, undefined],
+          pages: [12, 1],
+        });
+
+        next(2);
+        await waitForNextUpdate();
+        expect(result.current.isFetchingPreviousPage).toBe(false);
+        expect(result.current.status).toBe('success');
+        expect(result.current.data).toEqual({
+          pageParams: [1, undefined],
+          pages: [12, 2],
+        });
+
+        next(13);
+        await waitForNextUpdate();
+        expect(result.current.isFetchingPreviousPage).toBe(false);
+        expect(result.current.status).toBe('success');
+        expect(result.current.data).toEqual({
+          pageParams: [1, undefined],
+          pages: [13, 2],
+        });
       });
     });
   });
