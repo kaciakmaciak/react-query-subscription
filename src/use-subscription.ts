@@ -1,7 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 import type {
-  QueryFunction,
   QueryKey,
   UseQueryResult,
   QueryFunctionContext,
@@ -11,10 +10,10 @@ import type {
   RetryDelayValue,
   RetryValue,
 } from 'react-query/types/core/retryer';
-import { Observable, of, firstValueFrom } from 'rxjs';
-import { catchError, finalize, share, tap, skip } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
-import { storeSubscription, cleanupSubscription } from './subscription-storage';
+import { useObservableQueryFn } from './use-observable-query-fn';
+import { cleanupSubscription } from './subscription-storage';
 
 export interface UseSubscriptionOptions<
   TSubscriptionFnData = unknown,
@@ -116,65 +115,12 @@ export function useSubscription<
     TSubscriptionKey
   > = {}
 ): UseSubscriptionResult<TData, TError> {
+  const { queryFn, clearErrors } = useObservableQueryFn(
+    subscriptionFn,
+    (data) => data // @todo move outside of the component
+  );
+
   const queryClient = useQueryClient();
-
-  // We cannot assume that this fn runs for this component.
-  // It might be a different observer associated to the same query key.
-  // https://github.com/tannerlinsley/react-query/blob/16b7d290c70639b627d9ada32951d211eac3adc3/src/core/query.ts#L376
-  // @todo: move from the component scope to queryCache
-  const failRefetchWith = useRef<false | Error>(false);
-
-  const queryFn: QueryFunction<TSubscriptionFnData, TSubscriptionKey> = (
-    context
-  ) => {
-    const { queryKey } = context;
-
-    if (failRefetchWith.current) {
-      throw failRefetchWith.current;
-    }
-
-    type Result = Promise<TSubscriptionFnData> & { cancel?: () => void };
-
-    const stream$ = subscriptionFn(context).pipe(share());
-    const result: Result = firstValueFrom(stream$);
-
-    // Fixes scenario when component unmounts before first emit.
-    // If we do not invalidate the query, the hook will never re-subscribe,
-    // as data are otherwise marked as fresh.
-    result.cancel = () => {
-      queryClient.invalidateQueries(queryKey);
-    };
-
-    // @todo: Skip subscription for SSR
-    cleanupSubscription(queryClient, queryKey);
-
-    const subscription = stream$
-      .pipe(
-        skip(1),
-        tap((data) => {
-          queryClient.setQueryData(queryKey, data);
-        }),
-        catchError((error) => {
-          failRefetchWith.current = error;
-          queryClient.setQueryData(queryKey, (data) => data, {
-            // To make the retryOnMount work
-            // @see: https://github.com/tannerlinsley/react-query/blob/9e414e8b4f3118b571cf83121881804c0b58a814/src/core/queryObserver.ts#L727
-            updatedAt: 0,
-          });
-          return of(undefined);
-        }),
-        finalize(() => {
-          queryClient.invalidateQueries(queryKey);
-        })
-      )
-      .subscribe();
-
-    // remember the current subscription
-    // see `cleanup` fn for more info
-    storeSubscription(queryClient, queryKey, subscription);
-
-    return result;
-  };
 
   const queryResult = useQuery<
     TSubscriptionFnData,
@@ -191,10 +137,7 @@ export function useSubscription<
     refetchOnReconnect: false,
     onSuccess: options.onData,
     onError: (error: TError) => {
-      // Once the error has been thrown, and a query result created (with error)
-      // cleanup the `failRefetchWith`.
-      failRefetchWith.current = false;
-
+      clearErrors();
       options.onError && options.onError(error);
     },
   });
