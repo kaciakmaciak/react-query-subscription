@@ -171,7 +171,7 @@ export function useSubscription<
 
     // remember the current subscription
     // see `cleanup` fn for more info
-    storeSubscription(queryClient, subscriptionKey, subscription);
+    storeSubscription(queryClient, queryKey, subscription);
 
     return result;
   };
