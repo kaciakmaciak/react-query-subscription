@@ -23,7 +23,7 @@ export function NewMessage(props: NewMessageProps) {
     addMessage({
       userId: user.id,
       message: inputValue,
-      sentAt: new Date(),
+      sentAt: Date.now(),
     });
 
     inputRef.current.value = '';

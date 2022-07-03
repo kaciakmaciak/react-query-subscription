@@ -106,6 +106,8 @@ html {
 }
 
 .chat .messages {
+  display: flex;
+  flex-direction: column-reverse;
   padding: 1rem;
   background: var(--background);
   flex-shrink: 2;

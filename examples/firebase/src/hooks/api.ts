@@ -1,9 +1,16 @@
 import { useMutation, useQuery } from 'react-query';
-import { useSubscription } from 'react-query-subscription';
+import {
+  useSubscription,
+  useInfiniteSubscription,
+} from 'react-query-subscription';
 import { faker } from '@faker-js/faker';
+import { addMinutes } from 'date-fns';
 
 import type { UseMutationOptions, UseQueryOptions } from 'react-query';
-import type { UseSubscriptionOptions } from 'react-query-subscription';
+import type {
+  UseSubscriptionOptions,
+  UseInfiniteSubscriptionOptions,
+} from 'react-query-subscription';
 
 import { getUsers$, findUser, addUser } from '../api/users';
 import { addMessage, getMessages$ } from '../api/messages';
@@ -12,6 +19,7 @@ import { useFingerprint } from './fingerprint';
 
 import type { User } from '../types/user';
 import type { Message } from '../types/message';
+import type { InfiniteData } from '../types/infinite-data';
 
 export function useUserQuery<TData = User>(
   options: UseQueryOptions<User, Error, TData> = {}
@@ -43,14 +51,25 @@ export function useUsersSubscription<Data = User[]>(
   return useSubscription('users', () => getUsers$(), options);
 }
 
-export function useMessagesSubscription<Data = Message[]>(
+export function useMessagesSubscription<Data = InfiniteData<Message[], number>>(
   chatId: string,
-  options: UseSubscriptionOptions<Message[], Error, Data> = {}
+  options: UseInfiniteSubscriptionOptions<
+    InfiniteData<Message[], number>,
+    Error,
+    Data
+  > = {}
 ) {
-  return useSubscription(
+  return useInfiniteSubscription(
     ['messages', chatId],
-    () => getMessages$(chatId),
-    options
+    ({ pageParam }) =>
+      getMessages$(
+        chatId,
+        pageParam ? { before: pageParam, limit: 5 } : { after: Date.now() }
+      ),
+    {
+      ...options,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
   );
 }
 

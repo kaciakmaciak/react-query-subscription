@@ -1,30 +1,34 @@
 import {
   collection,
   query,
-  where,
   orderBy,
   doc,
   addDoc,
+  limit,
+  startAfter,
+  endAt,
 } from 'firebase/firestore';
 import { collectionData } from 'rxfire/firestore';
-import { startOfDay, addDays } from 'date-fns';
+import { map, tap } from 'rxjs/operators';
 
 import type { Observable } from 'rxjs';
 import type {
   DocumentData,
   QueryDocumentSnapshot,
   SnapshotOptions,
+  QueryConstraint,
 } from 'firebase/firestore';
 
 import { db } from '../firebase';
 
 import type { Message } from '../types/message';
+import type { InfiniteData } from '../types/infinite-data';
 
 export interface MessageDocument {
   id: string;
   userId: string;
   message: string;
-  sentAt: Date;
+  sentAt: number;
 }
 
 const messageConverter = {
@@ -40,7 +44,7 @@ const messageConverter = {
       id: snapshot.id,
       userId: data.userId,
       message: data.message,
-      sentAt: data.sentAt?.toDate(),
+      sentAt: data.sentAt,
     };
   },
 };
@@ -60,13 +64,36 @@ export async function addMessage(
   };
 }
 
-export function getMessages$(chatId: string): Observable<Message[]> {
+export type LiveMessagesCursor = { after: number };
+export type PreviousMessagesCursor = { before: number; limit: number };
+export type MessagesCursor = LiveMessagesCursor | PreviousMessagesCursor;
+
+function isLiveMessagesCursor(
+  cursor: MessagesCursor
+): cursor is LiveMessagesCursor {
+  return 'after' in cursor;
+}
+
+export function getMessages$(
+  chatId: string,
+  cursor: MessagesCursor
+): Observable<InfiniteData<Message[], number>> {
+  const constraints: QueryConstraint[] = isLiveMessagesCursor(cursor)
+    ? [orderBy('sentAt', 'desc'), endAt(cursor.after)]
+    : [orderBy('sentAt', 'desc'), startAfter(cursor.before), limit(5)];
+
   const messagesRef = query(
     collection(doc(db, 'messages', chatId), 'messages').withConverter(
       messageConverter
     ),
-    orderBy('sentAt', 'asc'),
-    where('sentAt', '>=', addDays(startOfDay(new Date()), -1))
+    ...constraints
   );
-  return collectionData(messagesRef, { idField: 'id' });
+  return collectionData(messagesRef, { idField: 'id' }).pipe(
+    map((data) => ({
+      data,
+      nextCursor: isLiveMessagesCursor(cursor)
+        ? cursor.after
+        : data[data.length - 1]?.sentAt,
+    }))
+  );
 }

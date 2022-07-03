@@ -2,5 +2,5 @@ export interface Message {
   id: string;
   userId: string;
   message: string;
-  sentAt: Date;
+  sentAt: number;
 }

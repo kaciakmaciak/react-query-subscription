@@ -70,9 +70,15 @@
     }
   },
   "peerDependencies": {
+    "graphql-ws": "^5.5.5",
     "react": "^16.8.0 || ^17.0.0",
     "react-query": "^3.0.0",
     "rxjs": "^7.1.0"
+  },
+  "peerDependenciesMeta": {
+    "graphql-ws": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@babel/runtime": "7.14.6"
@@ -115,6 +121,7 @@
     "eslint-plugin-react-hooks": "4.2.0",
     "eslint-plugin-testing-library": "4.6.0",
     "eventsource": "2.0.2",
+    "graphql-ws": "5.5.5",
     "husky": "7.0.0",
     "jest": "27.0.6",
     "lint-staged": "11.0.0",

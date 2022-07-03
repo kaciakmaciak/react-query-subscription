@@ -1,0 +1,8 @@
+.animate {
+  transition: all 1000ms ease-in;
+}
+
+.transparent {
+  opacity: 0.3;
+  transition: all 1000ms ease-in;
+}
