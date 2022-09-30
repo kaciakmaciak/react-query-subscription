@@ -1,3 +1,16 @@
+## [1.6.0](https://github.com/kaciakmaciak/react-query-subscription/compare/v1.5.1...v1.6.0) (2022-09-30)
+
+
+### ✨ Features
+
+* **useInfiniteSubscription:** add `useInfiniteSubscription` hook ([64a3f94](https://github.com/kaciakmaciak/react-query-subscription/commit/64a3f94b41dda867579abadf8c6aa7fc8d9b34c6)), closes [#55](https://github.com/kaciakmaciak/react-query-subscription/issues/55)
+* **useSubscription:** pass `queryKey` to  `subscriptionFn` ([7564823](https://github.com/kaciakmaciak/react-query-subscription/commit/75648232ed75b0a74adf71fe9aa2f7445cf60f3a))
+
+
+### 🐛 Bug Fixes
+
+* **useInfiniteSubscription:** fix unsubscribing when previous/next page has been fetched ([a05675b](https://github.com/kaciakmaciak/react-query-subscription/commit/a05675be0fb29b83acef3a803977900504a09c47))
+
 ## [1.6.0-beta.2](https://github.com/kaciakmaciak/react-query-subscription/compare/v1.6.0-beta.1...v1.6.0-beta.2) (2022-07-02)
 
 
