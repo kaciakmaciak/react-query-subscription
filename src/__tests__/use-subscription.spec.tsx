@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderHook, RenderHookResult } from '@testing-library/react-hooks';
-import { interval } from 'rxjs';
-import { map, finalize } from 'rxjs/operators';
+import { interval, fromEvent } from 'rxjs';
+import { map, finalize, takeUntil } from 'rxjs/operators';
 import { QueryClient, QueryClientProvider, QueryCache } from 'react-query';
 
 import {
@@ -528,6 +528,28 @@ describe('useSubscription', () => {
 
       unmount();
       expect(finalizeFn).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('queryFn', () => {
+    describe('signal', () => {
+      it('should cancel the subscription', async () => {
+        const finalizeFn = jest.fn();
+        const testSubscriptionFn = jest.fn(({ signal }) =>
+          interval(testInterval).pipe(
+            takeUntil(fromEvent(signal, 'abort')),
+            finalize(finalizeFn)
+          )
+        );
+        const { unmount } = renderHook(
+          () => useSubscription(testSubscriptionKey, testSubscriptionFn),
+          { wrapper: Wrapper }
+        );
+        expect(finalizeFn).not.toHaveBeenCalled();
+
+        unmount();
+        expect(finalizeFn).toHaveBeenCalled();
+      });
     });
   });
 
