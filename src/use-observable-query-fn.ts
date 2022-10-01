@@ -58,7 +58,9 @@ export function useObservableQueryFn<
     // If we do not invalidate the query, the hook will never re-subscribe,
     // as data are otherwise marked as fresh.
     result.cancel = () => {
-      queryClient.invalidateQueries(queryKey);
+      queryClient.invalidateQueries(queryKey, undefined, {
+        cancelRefetch: false,
+      });
     };
 
     // @todo: Skip subscription for SSR
@@ -82,7 +84,9 @@ export function useObservableQueryFn<
           return of(undefined);
         }),
         finalize(() => {
-          queryClient.invalidateQueries(queryKey);
+          queryClient.invalidateQueries(queryKey, undefined, {
+            cancelRefetch: false,
+          });
         })
       )
       .subscribe();
