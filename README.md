@@ -33,13 +33,13 @@ React Query `useQuery`'s query function is _any_ function which returns a Promis
 ### NPM
 
 ```sh
-npm install react-query-subscription react react-query@3 rxjs@7
+npm install react-query-subscription react @tanstack/react-query@4 rxjs@7
 ```
 
 or
 
 ```sh
-yarn add react-query-subscription react react-query@3 rxjs@7
+yarn add react-query-subscription react @tanstack/react-query@4 rxjs@7
 ```
 
 ## Use cases

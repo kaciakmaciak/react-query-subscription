@@ -1,15 +1,15 @@
 import { useEffect } from 'react';
-import { useQuery, useQueryClient, hashQueryKey } from 'react-query';
+import { hashQueryKey, useQuery, useQueryClient } from '@tanstack/react-query';
 import type {
   QueryKey,
   UseQueryResult,
   QueryFunctionContext,
   PlaceholderDataFunction,
-} from 'react-query';
+} from '@tanstack/react-query';
 import type {
   RetryDelayValue,
   RetryValue,
-} from 'react-query/types/core/retryer';
+} from '@tanstack/query-core/build/lib/retryer';
 import { Observable } from 'rxjs';
 
 import { useObservableQueryFn } from './use-observable-query-fn';

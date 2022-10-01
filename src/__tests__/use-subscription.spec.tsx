@@ -2,7 +2,11 @@ import React from 'react';
 import { renderHook, RenderHookResult } from '@testing-library/react-hooks';
 import { interval, fromEvent } from 'rxjs';
 import { map, finalize, takeUntil } from 'rxjs/operators';
-import { QueryClient, QueryClientProvider, QueryCache } from 'react-query';
+import {
+  QueryClient,
+  QueryClientProvider,
+  QueryCache,
+} from '@tanstack/react-query';
 
 import {
   useSubscription,
@@ -20,6 +24,12 @@ describe('useSubscription', () => {
       queryCache,
       defaultOptions: {
         queries: { retry: false },
+      },
+      logger: {
+        log: console.log,
+        warn: console.warn,
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        error: () => {},
       },
     });
   });
@@ -575,14 +585,16 @@ describe('useSubscription', () => {
             }),
           { wrapper: Wrapper }
         );
-        expect(result.current.status).toBe('idle');
+        expect(result.current.status).toBe('loading');
+        expect(result.current.fetchStatus).toBe('idle');
         expect(result.current.data).toBeUndefined();
 
         // Wait for the test interval amount of time.
         // The data should not be populated as enabled = false.
         await new Promise((resolve) => setTimeout(resolve, 2 * testInterval));
 
-        expect(result.current.status).toBe('idle');
+        expect(result.current.status).toBe('loading');
+        expect(result.current.fetchStatus).toBe('idle');
         expect(result.current.data).toBeUndefined();
         expect(finalizeFn).toHaveBeenCalledTimes(0);
         expect(testSubscriptionFn).toHaveBeenCalledTimes(0);
@@ -596,16 +608,20 @@ describe('useSubscription', () => {
             }),
           { wrapper: Wrapper, initialProps: { enabled: false } }
         );
+        expect(result.current.status).toBe('loading');
+        expect(result.current.fetchStatus).toBe('idle');
         expect(result.current.data).toBeUndefined();
 
         rerender({ enabled: true });
 
         await waitForNextUpdate();
         expect(result.current.status).toBe('loading');
+        expect(result.current.fetchStatus).toBe('fetching');
         expect(result.current.data).toBeUndefined();
 
         await waitForNextUpdate();
         expect(result.current.status).toBe('success');
+        expect(result.current.fetchStatus).toBe('idle');
         expect(result.current.data).toBe(0);
       });
     });

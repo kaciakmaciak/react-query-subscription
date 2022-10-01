@@ -1,14 +1,6 @@
-import { setLogger } from 'react-query';
 import EventSource from 'eventsource';
 
 import { server } from '../src/__api-mocks__/server';
-
-setLogger({
-  log: console.log,
-  warn: console.warn,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  error: () => {},
-});
 
 /**
  * MSW

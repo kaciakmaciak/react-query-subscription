@@ -1,4 +1,4 @@
-import type { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 import { Subscription } from 'rxjs';
 
 const clientCacheSubscriptionsKey = ['__activeSubscriptions__'];
