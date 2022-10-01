@@ -1,7 +1,7 @@
 import { QueryKey, hashQueryKey, QueryClient } from 'react-query';
 import { Subscription } from 'rxjs';
 
-const clientCacheSubscriptionsKey = '__activeSubscriptions__';
+const clientCacheSubscriptionsKey = ['__activeSubscriptions__'];
 const defaultKey = Symbol('__default__');
 
 type SubscriptionStorageItem = Map<string | typeof defaultKey, Subscription>;
