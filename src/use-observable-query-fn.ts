@@ -1,10 +1,10 @@
 import { useRef } from 'react';
-import { useQueryClient, hashQueryKey } from 'react-query';
+import { hashQueryKey, useQueryClient } from '@tanstack/react-query';
 import type {
   QueryFunction,
   QueryKey,
   QueryFunctionContext,
-} from 'react-query';
+} from '@tanstack/react-query';
 import { Observable, of, firstValueFrom } from 'rxjs';
 import { catchError, finalize, share, tap, skip } from 'rxjs/operators';
 

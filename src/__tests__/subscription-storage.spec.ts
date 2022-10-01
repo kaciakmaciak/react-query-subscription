@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs';
-import { QueryClient, QueryCache } from 'react-query';
+import { QueryClient, QueryCache } from '@tanstack/react-query';
 
 import {
   storeSubscription,

@@ -1,5 +1,9 @@
 import { useEffect } from 'react';
-import { useInfiniteQuery, useQueryClient, hashQueryKey } from 'react-query';
+import {
+  hashQueryKey,
+  useInfiniteQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import type {
   QueryKey,
   UseInfiniteQueryResult,
@@ -8,11 +12,11 @@ import type {
   InfiniteData,
   GetPreviousPageParamFunction,
   GetNextPageParamFunction,
-} from 'react-query';
+} from '@tanstack/react-query';
 import type {
   RetryDelayValue,
   RetryValue,
-} from 'react-query/types/core/retryer';
+} from '@tanstack/query-core/build/lib/retryer';
 import { Observable } from 'rxjs';
 
 import { useObservableQueryFn } from './use-observable-query-fn';

@@ -2,7 +2,11 @@ import React from 'react';
 import { renderHook } from '@testing-library/react-hooks';
 import { Subject } from 'rxjs';
 import { finalize, filter } from 'rxjs/operators';
-import { QueryClient, QueryClientProvider, QueryCache } from 'react-query';
+import {
+  QueryClient,
+  QueryClientProvider,
+  QueryCache,
+} from '@tanstack/react-query';
 
 import { useInfiniteSubscription } from '../use-infinite-subscription';
 
@@ -16,6 +20,12 @@ describe('useInfiniteSubscription', () => {
       queryCache,
       defaultOptions: {
         queries: { retry: false },
+      },
+      logger: {
+        log: console.log,
+        warn: console.warn,
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        error: () => {},
       },
     });
   });

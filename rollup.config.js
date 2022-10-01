@@ -17,7 +17,7 @@ const external = ['react', 'react-dom', 'react-query', 'rxjs'];
 const globals = {
   react: 'React',
   'react-dom': 'ReactDOM',
-  'react-query': 'ReactQuery',
+  '@tanstack/react-query': 'ReactQuery',
   rxjs: 'rxjs',
   'rxjs/operators': 'rxjs.operators',
 };

@@ -1,11 +1,11 @@
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   useSubscription,
   useInfiniteSubscription,
 } from 'react-query-subscription';
 import { faker } from '@faker-js/faker';
 
-import type { UseMutationOptions } from 'react-query';
+import type { UseMutationOptions } from '@tanstack/react-query';
 import type {
   UseSubscriptionOptions,
   UseInfiniteSubscriptionOptions,
@@ -45,7 +45,7 @@ export function useUserQuery() {
 export function useUsersSubscription<Data = User[]>(
   options: UseSubscriptionOptions<User[], Error, Data> = {}
 ) {
-  return useSubscription('users', () => getUsers$(), options);
+  return useSubscription(['users'], () => getUsers$(), options);
 }
 
 export function useMessagesSubscription<Data = InfiniteData<Message[], number>>(
