@@ -70,6 +70,7 @@ export function useObservableQueryFn<
     if (signal) {
       signal.addEventListener('abort', cancel);
     } else {
+      /* istanbul ignore next */
       result.cancel = cancel;
     }
 
