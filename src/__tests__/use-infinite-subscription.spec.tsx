@@ -49,7 +49,7 @@ describe('useInfiniteSubscription', () => {
     };
   }
 
-  const testSubscriptionKey = 'test-subscription-key';
+  const testSubscriptionKey = ['test-subscription-key'];
 
   function mapToPages<T>(data: T) {
     return { pageParams: [undefined], pages: [data] };

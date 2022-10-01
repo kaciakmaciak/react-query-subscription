@@ -38,14 +38,14 @@ describe('subscription storage', () => {
     const observerFn = jest.fn();
     const { subscription, next } = subscriptionFactory(observerFn);
 
-    storeSubscription(queryClient, 'test', subscription);
+    storeSubscription(queryClient, ['test'], subscription);
 
     next('value-1');
     expect(observerFn).toHaveBeenCalledTimes(1);
     expect(observerFn).toHaveBeenCalledWith('value-1');
     observerFn.mockClear();
 
-    cleanupSubscription(queryClient, 'test');
+    cleanupSubscription(queryClient, ['test']);
 
     next('value-2');
     expect(observerFn).not.toHaveBeenCalled();
@@ -59,8 +59,8 @@ describe('subscription storage', () => {
     const { subscription: subscriptionB, next: nextB } =
       subscriptionFactory(observerBFn);
 
-    storeSubscription(queryClient, 'testA', subscriptionA);
-    storeSubscription(queryClient, 'testB', subscriptionB);
+    storeSubscription(queryClient, ['testA'], subscriptionA);
+    storeSubscription(queryClient, ['testB'], subscriptionB);
 
     nextA('A1');
     expect(observerAFn).toHaveBeenCalledTimes(1);
@@ -71,7 +71,7 @@ describe('subscription storage', () => {
     expect(observerBFn).toHaveBeenCalledWith('B1');
     observerBFn.mockClear();
 
-    cleanupSubscription(queryClient, 'testA');
+    cleanupSubscription(queryClient, ['testA']);
 
     nextA('A2');
     expect(observerAFn).not.toHaveBeenCalled();
@@ -82,7 +82,7 @@ describe('subscription storage', () => {
 
   it('should not fail when key does not exist', () => {
     expect(() =>
-      cleanupSubscription(queryClient, 'test-non-existing')
+      cleanupSubscription(queryClient, ['test-non-existing'])
     ).not.toThrow();
   });
 });

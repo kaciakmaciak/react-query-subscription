@@ -41,7 +41,7 @@ describe('useSubscription', () => {
   const test$ = interval(testInterval).pipe(finalize(finalizeFn));
   const testSubscriptionFn = jest.fn(() => test$);
 
-  const testSubscriptionKey = 'test-subscription-key';
+  const testSubscriptionKey = ['test-subscription-key'];
 
   afterEach(() => {
     testSubscriptionFn.mockClear();
@@ -231,7 +231,7 @@ describe('useSubscription', () => {
       firstHookRender = renderHook(
         (options: UseSubscriptionOptions) =>
           useSubscription(
-            'first-subscription-key',
+            ['first-subscription-key'],
             testSubscriptionFn,
             options
           ),
