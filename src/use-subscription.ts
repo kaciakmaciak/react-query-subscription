@@ -135,12 +135,18 @@ export function useSubscription<
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
-    onSuccess: options.onData,
     onError: (error: TError) => {
       clearErrors();
       options.onError && options.onError(error);
     },
   });
+
+  useEffect(() => {
+    if (queryResult.isSuccess) {
+      options.onData?.(queryResult.data);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryResult.data]);
 
   useEffect(() => {
     return function cleanup() {
