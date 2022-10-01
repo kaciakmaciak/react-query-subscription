@@ -43,7 +43,7 @@ export function useObservableQueryFn<
   const queryFn: QueryFunction<TSubscriptionFnData, TSubscriptionKey> = (
     context
   ) => {
-    const { queryKey, pageParam } = context;
+    const { queryKey, pageParam, signal } = context;
 
     if (failRefetchWith.current) {
       throw failRefetchWith.current;
@@ -57,11 +57,21 @@ export function useObservableQueryFn<
     // Fixes scenario when component unmounts before first emit.
     // If we do not invalidate the query, the hook will never re-subscribe,
     // as data are otherwise marked as fresh.
-    result.cancel = () => {
+    function cancel() {
       queryClient.invalidateQueries(queryKey, undefined, {
         cancelRefetch: false,
       });
-    };
+    }
+    // `signal` is available on context from ReactQuery 3.30.0
+    // If `AbortController` is not available in the current runtime environment
+    // ReactQuery sets `signal` to `undefined`. In that case we fallback to
+    // old API, attaching `cancel` fn on promise.
+    // @see https://tanstack.com/query/v4/docs/guides/query-cancellation
+    if (signal) {
+      signal.addEventListener('abort', cancel);
+    } else {
+      result.cancel = cancel;
+    }
 
     // @todo: Skip subscription for SSR
     cleanupSubscription(queryClient, queryKey, pageParam ?? undefined);
