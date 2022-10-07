@@ -1,3 +1,10 @@
+## [1.7.0](https://github.com/kaciakmaciak/react-query-subscription/compare/v1.6.0...v1.7.0) (2022-10-07)
+
+
+### ✨ Features
+
+* **helpers:** deprecate `fromEventSource` and `eventSource$` helpers ([01cf6b9](https://github.com/kaciakmaciak/react-query-subscription/commit/01cf6b9a23bba80811a0d6e20b9bfe40664f0431))
+
 ## [1.6.0](https://github.com/kaciakmaciak/react-query-subscription/compare/v1.5.1...v1.6.0) (2022-09-30)
 
 
