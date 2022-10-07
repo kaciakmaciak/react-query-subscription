@@ -53,7 +53,8 @@ TODO
 ```TypeScript
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { useSubscription, eventSource$ } from 'react-query-subscription';
+import { useSubscription } from 'react-query-subscription';
+import { eventSource$ } from 'rx-event-source';
 
 const queryClient = new QueryClient();
 
@@ -69,6 +70,7 @@ function App() {
 function SseExample() {
   const { data, isLoading, isError, error } = useSubscription(
     'some-key',
+    // @see https://kaciakmaciak.github.io/rx-event-source/modules.html#eventSource_
     () => eventSource$('/api/v1/sse'),
     {
       // options
@@ -88,6 +90,8 @@ function SseExample() {
   return <div>Data: {JSON.stringify(data)}</div>;
 }
 ```
+
+See [`rx-event-source` docs](https://kaciakmaciak.github.io/rx-event-source).
 
 ### GraphQL subscription using [`graphql-ws`](https://github.com/enisdenjo/graphql-ws)
 

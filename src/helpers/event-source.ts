@@ -17,6 +17,8 @@ export interface EventSourceOptions<TData = unknown> {
 /**
  * Takes EventSource and creates an observable from it.
  *
+ * @deprecated Use `fromEventSource` from `rx-event-source` package instead.
+ *
  * @example
  * ```ts
  * const sse = new EventSource(url, configuration);
@@ -59,6 +61,8 @@ export function fromEventSource<TData = unknown>(
  * parsed event source data.
  * Opens the event source once subscribed.
  * Closes the event source, once unsubscribed.
+ *
+ * @deprecated Use `eventSource$` from `rx-event-source` package instead.
  *
  * @example
  * ```ts
