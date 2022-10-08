@@ -1,3 +1,10 @@
+## [1.8.0](https://github.com/kaciakmaciak/react-query-subscription/compare/v1.7.0...v1.8.0) (2022-10-08)
+
+
+### ✨ Features
+
+* **peer-deps:** support React v18 ([3b3dd5c](https://github.com/kaciakmaciak/react-query-subscription/commit/3b3dd5c32bf1325e238bdea71f1c3f642476b13f))
+
 ## [1.7.0](https://github.com/kaciakmaciak/react-query-subscription/compare/v1.6.0...v1.7.0) (2022-10-07)
 
 
