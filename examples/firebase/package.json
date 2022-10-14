@@ -1,6 +1,9 @@
 {
   "name": "react-query-subscription-firebase-example",
   "private": true,
+  "engines": {
+    "npm": ">=8"
+  },
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
