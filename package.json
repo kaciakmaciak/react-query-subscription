@@ -33,6 +33,9 @@
     "es",
     "types"
   ],
+  "workspaces": [
+    "examples/*"
+  ],
   "scripts": {
     "prepare": "husky install",
     "prerelease": "npm run build",
