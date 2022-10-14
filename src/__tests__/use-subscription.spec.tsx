@@ -30,7 +30,7 @@ describe('useSubscription', () => {
 
   function Wrapper({
     children,
-  }: React.PropsWithChildren<Record<string, never>>) {
+  }: UseSubscriptionOptions & { children: React.ReactNode }) {
     return (
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     );
