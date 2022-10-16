@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient, hashQueryKey } from 'react-query';
 import type {
   QueryFunction,
   QueryKey,
@@ -43,7 +43,8 @@ export function useObservableQueryFn<
   const queryFn: QueryFunction<TSubscriptionFnData, TSubscriptionKey> = (
     context
   ) => {
-    const { queryKey, pageParam, signal } = context;
+    const { queryKey: subscriptionKey, pageParam, signal } = context;
+    const hashedSubscriptionKey = hashQueryKey(subscriptionKey);
 
     if (failRefetchWith.current) {
       throw failRefetchWith.current;
@@ -58,7 +59,7 @@ export function useObservableQueryFn<
     // If we do not invalidate the query, the hook will never re-subscribe,
     // as data are otherwise marked as fresh.
     function cancel() {
-      queryClient.invalidateQueries(queryKey, undefined, {
+      queryClient.invalidateQueries(subscriptionKey, undefined, {
         cancelRefetch: false,
       });
     }
@@ -75,19 +76,23 @@ export function useObservableQueryFn<
     }
 
     // @todo: Skip subscription for SSR
-    cleanupSubscription(queryClient, queryKey, pageParam ?? undefined);
+    cleanupSubscription(
+      queryClient,
+      hashedSubscriptionKey,
+      pageParam ?? undefined
+    );
 
     const subscription = stream$
       .pipe(
         skip(1),
         tap((data) => {
-          queryClient.setQueryData(queryKey, (previousData) =>
+          queryClient.setQueryData(subscriptionKey, (previousData) =>
             dataUpdater(data, previousData, pageParam)
           );
         }),
         catchError((error) => {
           failRefetchWith.current = error;
-          queryClient.setQueryData(queryKey, (data) => data, {
+          queryClient.setQueryData(subscriptionKey, (data) => data, {
             // To make the retryOnMount work
             // @see: https://github.com/tannerlinsley/react-query/blob/9e414e8b4f3118b571cf83121881804c0b58a814/src/core/queryObserver.ts#L727
             updatedAt: 0,
@@ -95,7 +100,7 @@ export function useObservableQueryFn<
           return of(undefined);
         }),
         finalize(() => {
-          queryClient.invalidateQueries(queryKey, undefined, {
+          queryClient.invalidateQueries(subscriptionKey, undefined, {
             cancelRefetch: false,
           });
         })
@@ -106,7 +111,7 @@ export function useObservableQueryFn<
     // see `cleanup` fn for more info
     storeSubscription(
       queryClient,
-      queryKey,
+      hashedSubscriptionKey,
       subscription,
       pageParam ?? undefined
     );

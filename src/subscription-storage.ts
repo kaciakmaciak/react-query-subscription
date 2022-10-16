@@ -1,4 +1,4 @@
-import { QueryKey, hashQueryKey, QueryClient } from 'react-query';
+import type { QueryClient } from 'react-query';
 import { Subscription } from 'rxjs';
 
 const clientCacheSubscriptionsKey = ['__activeSubscriptions__'];
@@ -10,16 +10,15 @@ type SubscriptionStorage = Map<string, SubscriptionStorageItem>;
 /**
  * Stores subscription by its key and `pageParam` in the clientCache.
  */
-export function storeSubscription<TSubscriptionKey extends QueryKey = QueryKey>(
+export function storeSubscription(
   queryClient: QueryClient,
-  subscriptionKey: TSubscriptionKey,
+  hashedSubscriptionKey: string,
   subscription: Subscription,
   pageParam?: string
 ) {
   const activeSubscriptions: SubscriptionStorage =
     queryClient.getQueryData(clientCacheSubscriptionsKey) || new Map();
 
-  const hashedSubscriptionKey = hashQueryKey(subscriptionKey);
   const previousSubscription = activeSubscriptions.get(hashedSubscriptionKey);
 
   let newSubscriptionValue: SubscriptionStorageItem;
@@ -38,17 +37,14 @@ export function storeSubscription<TSubscriptionKey extends QueryKey = QueryKey>(
 /**
  * Removes stored subscription by its key and `pageParam` from the clientCache.
  */
-export function cleanupSubscription<
-  TSubscriptionKey extends QueryKey = QueryKey
->(
+export function cleanupSubscription(
   queryClient: QueryClient,
-  subscriptionKey: TSubscriptionKey,
+  hashedSubscriptionKey: string,
   pageParam?: string
 ) {
   const activeSubscriptions: SubscriptionStorage =
     queryClient.getQueryData(clientCacheSubscriptionsKey) || new Map();
 
-  const hashedSubscriptionKey = hashQueryKey(subscriptionKey);
   const subscription = activeSubscriptions.get(hashedSubscriptionKey);
 
   if (!subscription) return;

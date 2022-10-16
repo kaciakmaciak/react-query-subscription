@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery, useQueryClient, hashQueryKey } from 'react-query';
 import type {
   QueryKey,
   UseQueryResult,
@@ -115,6 +115,8 @@ export function useSubscription<
     TSubscriptionKey
   > = {}
 ): UseSubscriptionResult<TData, TError> {
+  const hashedSubscriptionKey = hashQueryKey(subscriptionKey);
+
   const { queryFn, clearErrors } = useObservableQueryFn(
     subscriptionFn,
     (data) => data
@@ -161,10 +163,12 @@ export function useSubscription<
         ?.getObserversCount();
 
       if (activeObserversCount === 0) {
-        cleanupSubscription(queryClient, subscriptionKey);
+        cleanupSubscription(queryClient, hashedSubscriptionKey);
       }
     };
-  }, [queryClient, subscriptionKey]);
+    // This is safe as `hashedSubscriptionKey` is derived from `subscriptionKey`.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryClient, hashedSubscriptionKey]);
 
   return queryResult;
 }
