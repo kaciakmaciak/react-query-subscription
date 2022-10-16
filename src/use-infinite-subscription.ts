@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useInfiniteQuery, useQueryClient } from 'react-query';
+import { useInfiniteQuery, useQueryClient, hashQueryKey } from 'react-query';
 import type {
   QueryKey,
   UseInfiniteQueryResult,
@@ -161,6 +161,8 @@ export function useInfiniteSubscription<
     TSubscriptionKey
   > = {}
 ): UseInfiniteSubscriptionResult<TData, TError> {
+  const hashedSubscriptionKey = hashQueryKey(subscriptionKey);
+
   const { queryFn, clearErrors } = useObservableQueryFn(
     subscriptionFn,
     (data, previousData, pageParam): InfiniteData<TSubscriptionFnData> => {
@@ -225,10 +227,12 @@ export function useInfiniteSubscription<
         ?.getObserversCount();
 
       if (activeObserversCount === 0) {
-        cleanupSubscription(queryClient, subscriptionKey);
+        cleanupSubscription(queryClient, hashedSubscriptionKey);
       }
     };
-  }, [queryClient, subscriptionKey]);
+    // This is safe as `hashedSubscriptionKey` is derived from `subscriptionKey`.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryClient, hashedSubscriptionKey]);
 
   return queryResult;
 }
