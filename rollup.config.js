@@ -1,3 +1,4 @@
+/* eslint-env node */
 import * as fs from 'fs';
 import * as path from 'path';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
@@ -13,13 +14,14 @@ import visualizer from 'rollup-plugin-visualizer';
 const packageJson = require('./package.json');
 const license = fs.readFileSync(path.resolve(__dirname, './LICENSE'), 'utf-8');
 
-const external = ['react', 'react-dom', 'react-query', 'rxjs'];
+const external = ['react', 'react-dom', 'react-query', 'rxjs', 'graphql-ws'];
 const globals = {
   react: 'React',
   'react-dom': 'ReactDOM',
   'react-query': 'ReactQuery',
   rxjs: 'rxjs',
   'rxjs/operators': 'rxjs.operators',
+  'graphql-ws': 'graphqlWs',
 };
 
 const inputSources = [

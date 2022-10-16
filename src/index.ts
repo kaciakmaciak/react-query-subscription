@@ -5,3 +5,5 @@ export type { UseInfiniteSubscriptionOptions } from './use-infinite-subscription
 
 export { eventSource$, fromEventSource } from './helpers/event-source';
 export type { EventSourceOptions } from './helpers/event-source';
+
+// export { graphqlSubscription$ } from './helpers/graphql-ws';
