@@ -55,6 +55,19 @@ describe('useInfiniteSubscription', () => {
     return { pageParams: [undefined], pages: [data] };
   }
 
+  it('should not re-subscribe when re-rendered', () => {
+    const { subscriptionFn } = subscriptionFnFactory();
+    const { rerender } = renderHook(
+      () => useInfiniteSubscription(['non-primitive-key'], subscriptionFn),
+      { wrapper: Wrapper }
+    );
+    expect(subscriptionFn).toHaveBeenCalledTimes(1);
+    subscriptionFn.mockClear();
+
+    rerender();
+    expect(subscriptionFn).toHaveBeenCalledTimes(0);
+  });
+
   describe('options', () => {
     describe('getNextPageParam', () => {
       test('fetching next page', async () => {
