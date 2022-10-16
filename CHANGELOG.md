@@ -1,3 +1,10 @@
+### [1.8.1](https://github.com/kaciakmaciak/react-query-subscription/compare/v1.8.0...v1.8.1) (2022-10-16)
+
+
+### 🐛 Bug Fixes
+
+* fix calling subscription fn multiple times when `subscriptionKey` is not a string ([a7f32f3](https://github.com/kaciakmaciak/react-query-subscription/commit/a7f32f3d1c958dc40c74dec8c8e99ced464e2f80))
+
 ## [1.8.0](https://github.com/kaciakmaciak/react-query-subscription/compare/v1.7.0...v1.8.0) (2022-10-08)
 
 
