@@ -196,6 +196,18 @@ describe('useSubscription', () => {
     expect(finalizeFn).toHaveBeenCalledTimes(1);
   });
 
+  it('should not re-subscribe when re-rendered', () => {
+    const { rerender } = renderHook(
+      () => useSubscription(['non-primitive-key'], testSubscriptionFn),
+      { wrapper: Wrapper }
+    );
+    expect(testSubscriptionFn).toHaveBeenCalledTimes(1);
+    testSubscriptionFn.mockClear();
+
+    rerender();
+    expect(testSubscriptionFn).toHaveBeenCalledTimes(0);
+  });
+
   test('re-subscribe when mounted/unmounted/mounted', async () => {
     const { result, waitForNextUpdate, unmount, rerender } = renderHook(
       () => useSubscription(testSubscriptionKey, testSubscriptionFn),
