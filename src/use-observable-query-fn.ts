@@ -5,8 +5,15 @@ import type {
   QueryKey,
   QueryFunctionContext,
 } from 'react-query';
-import { Observable, of, firstValueFrom } from 'rxjs';
-import { catchError, finalize, share, tap, skip } from 'rxjs/operators';
+import { Observable, of, firstValueFrom, Subject } from 'rxjs';
+import {
+  catchError,
+  finalize,
+  share,
+  tap,
+  skip,
+  takeUntil,
+} from 'rxjs/operators';
 
 import { storeSubscription, cleanupSubscription } from './subscription-storage';
 
@@ -15,7 +22,6 @@ export interface UseObservableQueryFnResult<
   TSubscriptionKey extends QueryKey = QueryKey
 > {
   queryFn: QueryFunction<TSubscriptionFnData, TSubscriptionKey>;
-  clearErrors: () => void;
 }
 
 export function useObservableQueryFn<
@@ -52,16 +58,19 @@ export function useObservableQueryFn<
 
     type Result = Promise<TSubscriptionFnData> & { cancel?: () => void };
 
-    const stream$ = subscriptionFn(context).pipe(share());
+    const cancelSubject = new Subject<boolean>();
+    const stream$ = subscriptionFn(context).pipe(
+      takeUntil(cancelSubject.asObservable()),
+      share()
+    );
     const result: Result = firstValueFrom(stream$);
 
     // Fixes scenario when component unmounts before first emit.
     // If we do not invalidate the query, the hook will never re-subscribe,
     // as data are otherwise marked as fresh.
     function cancel() {
-      queryClient.invalidateQueries(subscriptionKey, undefined, {
-        cancelRefetch: false,
-      });
+      failRefetchWith.current = false;
+      cancelSubject.next(true);
     }
     // `signal` is available on context from ReactQuery 3.30.0
     // If `AbortController` is not available in the current runtime environment
@@ -97,12 +106,15 @@ export function useObservableQueryFn<
             // @see: https://github.com/tannerlinsley/react-query/blob/9e414e8b4f3118b571cf83121881804c0b58a814/src/core/queryObserver.ts#L727
             updatedAt: 0,
           });
+          queryClient.refetchQueries(subscriptionKey);
           return of(undefined);
         }),
         finalize(() => {
-          queryClient.invalidateQueries(subscriptionKey, undefined, {
-            cancelRefetch: false,
-          });
+          queryClient.invalidateQueries(
+            subscriptionKey,
+            { refetchActive: false },
+            { cancelRefetch: true, throwOnError: true }
+          );
         })
       )
       .subscribe();
@@ -119,13 +131,5 @@ export function useObservableQueryFn<
     return result;
   };
 
-  return {
-    queryFn,
-    // @todo incorporate into `queryFn`?
-    clearErrors: () => {
-      // Once the error has been thrown, and a query result created (with error)
-      // cleanup the `failRefetchWith`.
-      failRefetchWith.current = false;
-    },
-  };
+  return { queryFn };
 }

@@ -163,7 +163,7 @@ export function useInfiniteSubscription<
 ): UseInfiniteSubscriptionResult<TData, TError> {
   const hashedSubscriptionKey = hashQueryKey(subscriptionKey);
 
-  const { queryFn, clearErrors } = useObservableQueryFn(
+  const { queryFn } = useObservableQueryFn(
     subscriptionFn,
     (data, previousData, pageParam): InfiniteData<TSubscriptionFnData> => {
       if (!isInfiniteData(previousData)) {
@@ -198,13 +198,9 @@ export function useInfiniteSubscription<
     ...options,
     staleTime: Infinity,
     refetchInterval: undefined,
-    refetchOnMount: true,
+    refetchOnMount: (query) => query.isStale(),
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
-    onError: (error: TError) => {
-      clearErrors();
-      options.onError && options.onError(error);
-    },
   });
 
   useEffect(() => {
@@ -234,5 +230,10 @@ export function useInfiniteSubscription<
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryClient, hashedSubscriptionKey]);
 
-  return queryResult;
+  return {
+    ...queryResult,
+    refetch(options) {
+      return queryResult.refetch({ cancelRefetch: true, ...options });
+    },
+  };
 }
