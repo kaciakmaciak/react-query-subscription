@@ -34,8 +34,8 @@ describe('useInfiniteSubscription', () => {
 
   function subscriptionFnFactory() {
     const testSubject = new Subject<number>();
-    const finalizeFn = jest.fn();
-    const subscriptionFn = jest.fn(({ pageParam = 0 }) =>
+    const finalizeFn = vi.fn();
+    const subscriptionFn = vi.fn(({ pageParam = 0 }) =>
       testSubject.asObservable().pipe(
         filter((data) => data >= pageParam * 10 && data < (pageParam + 1) * 10),
         finalize(finalizeFn)
@@ -73,7 +73,7 @@ describe('useInfiniteSubscription', () => {
       test('fetching next page', async () => {
         const { subscriptionFn, next } = subscriptionFnFactory();
 
-        const getNextPageParam = jest.fn(
+        const getNextPageParam = vi.fn(
           (_lastPage, allPages) => allPages.length
         );
         const { result, waitForNextUpdate } = renderHook(
@@ -133,7 +133,7 @@ describe('useInfiniteSubscription', () => {
       it('should have no next page', async () => {
         const { subscriptionFn, next } = subscriptionFnFactory();
 
-        const getNextPageParam = jest.fn(() => undefined);
+        const getNextPageParam = vi.fn(() => undefined);
         const { result, waitForNextUpdate } = renderHook(
           () =>
             useInfiniteSubscription(testSubscriptionKey, subscriptionFn, {
@@ -170,7 +170,7 @@ describe('useInfiniteSubscription', () => {
       test('updating previously subscribed pages', async () => {
         const { subscriptionFn, next } = subscriptionFnFactory();
 
-        const getNextPageParam = jest.fn(
+        const getNextPageParam = vi.fn(
           (_lastPage, allPages) => allPages.length
         );
         const { result, waitForNextUpdate } = renderHook(
@@ -227,7 +227,7 @@ describe('useInfiniteSubscription', () => {
       test('fetching previous page', async () => {
         const { subscriptionFn, next } = subscriptionFnFactory();
 
-        const getPreviousPageParam = jest.fn(
+        const getPreviousPageParam = vi.fn(
           (_lastPage, allPages) => allPages.length
         );
         const { result, waitForNextUpdate } = renderHook(
@@ -287,7 +287,7 @@ describe('useInfiniteSubscription', () => {
       it('should have no previous page', async () => {
         const { subscriptionFn, next } = subscriptionFnFactory();
 
-        const getPreviousPageParam = jest.fn(() => undefined);
+        const getPreviousPageParam = vi.fn(() => undefined);
         const { result, waitForNextUpdate } = renderHook(
           () =>
             useInfiniteSubscription(testSubscriptionKey, subscriptionFn, {
@@ -324,7 +324,7 @@ describe('useInfiniteSubscription', () => {
       test('updating previously subscribed pages', async () => {
         const { subscriptionFn, next } = subscriptionFnFactory();
 
-        const getPreviousPageParam = jest.fn(
+        const getPreviousPageParam = vi.fn(
           (_lastPage, allPages) => allPages.length
         );
         const { result, waitForNextUpdate } = renderHook(

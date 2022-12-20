@@ -37,9 +37,9 @@ describe('useSubscription', () => {
   }
 
   const testInterval = 10;
-  const finalizeFn = jest.fn();
+  const finalizeFn = vi.fn();
   const test$ = interval(testInterval).pipe(finalize(finalizeFn));
-  const testSubscriptionFn = jest.fn(() => test$);
+  const testSubscriptionFn = vi.fn(() => test$);
 
   const testSubscriptionKey = ['test-subscription-key'];
 
@@ -77,7 +77,7 @@ describe('useSubscription', () => {
   });
 
   test('subscription data', async () => {
-    const onData = jest.fn();
+    const onData = vi.fn();
     const { result, waitForNextUpdate } = renderHook(
       () =>
         useSubscription(testSubscriptionKey, testSubscriptionFn, {
@@ -102,7 +102,7 @@ describe('useSubscription', () => {
     const testErrorSubscriptionFn = () => {
       throw new Error('Test Error');
     };
-    const onError = jest.fn();
+    const onError = vi.fn();
 
     const { result, waitForNextUpdate } = renderHook(
       () =>
@@ -124,7 +124,7 @@ describe('useSubscription', () => {
   });
 
   test('emitted error', async () => {
-    const testErrorSubscriptionFn = jest.fn(() =>
+    const testErrorSubscriptionFn = vi.fn(() =>
       interval(testInterval).pipe(
         map((n) => {
           if (n === 2) {
@@ -134,7 +134,7 @@ describe('useSubscription', () => {
         })
       )
     );
-    const onError = jest.fn();
+    const onError = vi.fn();
 
     const { result, waitForNextUpdate } = renderHook(
       () =>
@@ -546,8 +546,8 @@ describe('useSubscription', () => {
   describe('queryFn', () => {
     describe('signal', () => {
       it('should cancel the subscription', async () => {
-        const finalizeFn = jest.fn();
-        const testSubscriptionFn = jest.fn(({ signal }) =>
+        const finalizeFn = vi.fn();
+        const testSubscriptionFn = vi.fn(({ signal }) =>
           interval(testInterval).pipe(
             takeUntil(fromEvent(signal, 'abort')),
             finalize(finalizeFn)
@@ -612,7 +612,7 @@ describe('useSubscription', () => {
 
     describe('retry', () => {
       it('should retry failed subscription 2 times', async () => {
-        const testErrorSubscriptionFn = jest.fn(() => {
+        const testErrorSubscriptionFn = vi.fn(() => {
           throw new Error('Test Error');
         });
 
@@ -639,7 +639,7 @@ describe('useSubscription', () => {
       });
 
       it('should not retry subscription if successfully subscribed but error emitted', async () => {
-        const testErrorSubscriptionFn = jest.fn(() =>
+        const testErrorSubscriptionFn = vi.fn(() =>
           interval(testInterval).pipe(
             map((n) => {
               if (n === 2) {
@@ -698,7 +698,7 @@ describe('useSubscription', () => {
       `(
         'should retry previously failed subscription ($description)',
         async ({ subscriptionFn, hasPreviousData }) => {
-          const fn = jest.fn(() => subscriptionFn());
+          const fn = vi.fn(() => subscriptionFn());
           const firstHookRender = renderHook(
             () =>
               useSubscription(testSubscriptionKey, fn, {
@@ -745,7 +745,7 @@ describe('useSubscription', () => {
       `(
         'should not retry previously failed subscription ($description)',
         async ({ subscriptionFn }) => {
-          const fn = jest.fn(() => subscriptionFn());
+          const fn = vi.fn(() => subscriptionFn());
           const firstHookRender = renderHook(
             () =>
               useSubscription(testSubscriptionKey, fn, {

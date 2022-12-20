@@ -1,22 +1,23 @@
 import { firstValueFrom, of } from 'rxjs';
 import { catchError, take, toArray } from 'rxjs/operators';
+import type { SpyInstance } from 'vitest';
 
 import { eventSource$ } from '../event-source';
 
 import { server } from '../../__api-mocks__/server';
 
 describe('EventSource helpers', () => {
-  let closeSseSpy: jest.SpyInstance;
+  let closeSseSpy: SpyInstance;
 
   beforeEach(() => {
-    closeSseSpy = jest.spyOn(global.EventSource.prototype, 'close');
+    closeSseSpy = vi.spyOn(global.EventSource.prototype, 'close');
   });
 
   afterEach(() => {
     closeSseSpy?.mockRestore();
   });
 
-  const requestListener = jest.fn();
+  const requestListener = vi.fn();
 
   beforeEach(() => {
     server.events.on('request:start', requestListener);
@@ -36,16 +37,16 @@ describe('EventSource helpers', () => {
       const sse$ = eventSource$(createAbsoluteUrl('/sse'));
       expect(await firstValueFrom(sse$.pipe(take(5), toArray())))
         .toMatchInlineSnapshot(`
-        Array [
-          "hello",
-          "world",
-          123,
-          "green",
-          Object {
-            "test": "red",
-          },
-        ]
-      `);
+          [
+            "hello",
+            "world",
+            123,
+            "green",
+            {
+              "test": "red",
+            },
+          ]
+        `);
     });
 
     it('should not open the EventSource until subscribed', async () => {
@@ -76,7 +77,7 @@ describe('EventSource helpers', () => {
           )
         )
       ).toMatchInlineSnapshot(`
-        Array [
+        [
           "hello",
           "world",
           123,
