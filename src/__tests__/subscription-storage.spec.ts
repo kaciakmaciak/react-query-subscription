@@ -35,7 +35,7 @@ describe('subscription storage', () => {
   }
 
   test('store and cleanup subscription', () => {
-    const observerFn = jest.fn();
+    const observerFn = vi.fn();
     const { subscription, next } = subscriptionFactory(observerFn);
 
     storeSubscription(queryClient, 'test', subscription);
@@ -52,10 +52,10 @@ describe('subscription storage', () => {
   });
 
   test('only unsubscribes the specified subscription', () => {
-    const observerAFn = jest.fn();
+    const observerAFn = vi.fn();
     const { subscription: subscriptionA, next: nextA } =
       subscriptionFactory(observerAFn);
-    const observerBFn = jest.fn();
+    const observerBFn = vi.fn();
     const { subscription: subscriptionB, next: nextB } =
       subscriptionFactory(observerBFn);
 

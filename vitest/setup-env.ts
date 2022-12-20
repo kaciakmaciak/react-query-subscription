@@ -1,7 +1,7 @@
 import { setLogger } from 'react-query';
 import EventSource from 'eventsource';
 
-import { server } from './src/__api-mocks__/server';
+import { server } from '../src/__api-mocks__/server';
 
 setLogger({
   log: console.log,
