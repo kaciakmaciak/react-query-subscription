@@ -3,6 +3,7 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.detectIndentation": true,
   "editor.tabSize": 2,
+  "editor.formatOnSave": true,
   "prettier.enable": true,
   "prettier.requireConfig": true,
   "prettier.useEditorConfig": true,
