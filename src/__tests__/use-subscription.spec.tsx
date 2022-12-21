@@ -836,7 +836,7 @@ describe('useSubscription', () => {
   });
 
   describe('returns', () => {
-    test('refetch', async () => {
+    test.skip('refetch', async () => {
       const { result, waitFor, unmount } = renderHook(
         () => useSubscription(testSubscriptionKey, testSubscriptionFn),
         { wrapper: Wrapper }
