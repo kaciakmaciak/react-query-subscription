@@ -17,5 +17,6 @@
     "typescriptreact",
     "html",
     "markdown"
-  ]
+  ],
+  "vitest.commandLine": "npm run test --"
 }
