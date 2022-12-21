@@ -109,6 +109,7 @@
     "conventional-changelog-conventionalcommits": "4.6.1",
     "cross-env": "7.0.3",
     "cz-conventional-changelog": "3.0.1",
+    "esbuild": "^0.16.10",
     "eslint": "7.29.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-config-standard": "16.0.3",
