@@ -1,6 +1,6 @@
 {
   "name": "react-query-subscription",
-  "version": "4.0.0-development",
+  "version": "2.0.0-beta.1",
   "engines": {
     "node": ">=10.13.0"
   },
